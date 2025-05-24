@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -115,21 +116,50 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
     onCategoriesChange(updatedCategories);
   };
 
+  const redistributeQuestions = (categoryId: string, deletedSubcategory: Subcategory, remainingSubcategories: Subcategory[]) => {
+    if (remainingSubcategories.length === 0) return remainingSubcategories;
+
+    const questionsToRedistribute = {
+      easy: deletedSubcategory.easy,
+      medium: deletedSubcategory.medium,
+      hard: deletedSubcategory.hard,
+    };
+
+    // Distribute questions evenly among remaining subcategories
+    const easyPerSubcat = Math.floor(questionsToRedistribute.easy / remainingSubcategories.length);
+    const mediumPerSubcat = Math.floor(questionsToRedistribute.medium / remainingSubcategories.length);
+    const hardPerSubcat = Math.floor(questionsToRedistribute.hard / remainingSubcategories.length);
+
+    // Calculate remainders
+    const easyRemainder = questionsToRedistribute.easy % remainingSubcategories.length;
+    const mediumRemainder = questionsToRedistribute.medium % remainingSubcategories.length;
+    const hardRemainder = questionsToRedistribute.hard % remainingSubcategories.length;
+
+    return remainingSubcategories.map((sub, index) => ({
+      ...sub,
+      easy: sub.easy + easyPerSubcat + (index < easyRemainder ? 1 : 0),
+      medium: sub.medium + mediumPerSubcat + (index < mediumRemainder ? 1 : 0),
+      hard: sub.hard + hardPerSubcat + (index < hardRemainder ? 1 : 0),
+    }));
+  };
+
   const deleteSubcategory = (categoryId: string, subcategoryId: string) => {
     const updatedCategories = categories.map(cat => {
       if (cat.id === categoryId) {
-        const updatedSubcategories = cat.subcategories.filter(sub => sub.id !== subcategoryId);
-        return { ...cat, subcategories: updatedSubcategories };
+        const subcategoryToDelete = cat.subcategories.find(sub => sub.id === subcategoryId);
+        const remainingSubcategories = cat.subcategories.filter(sub => sub.id !== subcategoryId);
+        
+        // Redistribute questions from deleted subcategory to remaining ones
+        const redistributedSubcategories = subcategoryToDelete 
+          ? redistributeQuestions(categoryId, subcategoryToDelete, remainingSubcategories)
+          : remainingSubcategories;
+        
+        return { ...cat, subcategories: redistributedSubcategories };
       }
       return cat;
     });
     
-    // If smart distribution is enabled, redistribute the questions
-    if (config.smartDistribution) {
-      applySmartDistribution(updatedCategories);
-    } else {
-      onCategoriesChange(updatedCategories);
-    }
+    onCategoriesChange(updatedCategories);
   };
 
   const addSubcategory = (categoryId: string) => {
@@ -223,22 +253,36 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
                       </div>
                     </div>
                     
-                    {/* Beautified Total - Right Justified */}
-                    <div className="text-right">
-                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-4 py-2 rounded-lg border border-blue-200 shadow-sm">
-                        <div className="flex items-center space-x-3 text-sm">
-                          <span className="text-lg font-bold text-blue-800">Total: {totals.total}</span>
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded font-medium">
-                            Easy: {totals.easy}
-                          </span>
-                          <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded font-medium">
-                            Medium: {totals.medium}
-                          </span>
-                          <span className="bg-red-100 text-red-800 px-2 py-1 rounded font-medium">
-                            Hard: {totals.hard}
-                          </span>
-                        </div>
-                      </div>
+                    {/* Button Icon Totals - Right Justified */}
+                    <div className="flex items-center space-x-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-800 font-bold hover:from-blue-100 hover:to-blue-200"
+                      >
+                        Total: {totals.total}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="bg-green-100 border-green-200 text-green-800 font-medium hover:bg-green-200"
+                      >
+                        Easy: {totals.easy}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="bg-orange-100 border-orange-200 text-orange-800 font-medium hover:bg-orange-200"
+                      >
+                        Medium: {totals.medium}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="bg-red-100 border-red-200 text-red-800 font-medium hover:bg-red-200"
+                      >
+                        Hard: {totals.hard}
+                      </Button>
                     </div>
                   </div>
 
