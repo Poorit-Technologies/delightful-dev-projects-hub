@@ -27,14 +27,18 @@ const CategoryTotals = ({ category }: CategoryTotalsProps) => {
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-800 font-bold hover:from-blue-100 hover:to-blue-200"
+        className="bg-gradient-to-b from-blue-100 via-blue-200 to-blue-300 border-2 border-blue-400 text-blue-900 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        style={{
+          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+        }}
       >
         Total: {totals.total}
       </Button>
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-gradient-to-b from-green-200 via-green-300 to-green-400 text-green-900 border-2 border-green-500 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        className="bg-gradient-to-b from-green-100 via-green-200 to-green-300 text-green-900 border-2 border-green-400 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
         style={{
           textShadow: '0 1px 2px rgba(0,0,0,0.3)',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
@@ -45,7 +49,7 @@ const CategoryTotals = ({ category }: CategoryTotalsProps) => {
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-gradient-to-b from-orange-200 via-orange-300 to-orange-400 text-orange-900 border-2 border-orange-500 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        className="bg-gradient-to-b from-orange-100 via-orange-200 to-orange-300 text-orange-900 border-2 border-orange-400 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
         style={{
           textShadow: '0 1px 2px rgba(0,0,0,0.3)',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
@@ -56,7 +60,7 @@ const CategoryTotals = ({ category }: CategoryTotalsProps) => {
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-gradient-to-b from-red-200 via-red-300 to-red-400 text-red-900 border-2 border-red-500 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        className="bg-gradient-to-b from-red-100 via-red-200 to-red-300 text-red-900 border-2 border-red-400 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
         style={{
           textShadow: '0 1px 2px rgba(0,0,0,0.3)',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'

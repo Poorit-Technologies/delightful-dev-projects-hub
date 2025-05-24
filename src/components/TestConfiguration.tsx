@@ -112,25 +112,33 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Total Questions */}
-              <div className="space-y-2 bg-blue-50 p-4 rounded-lg border border-gray-200">
-                <Label htmlFor="totalQuestions" className="text-sm font-medium text-center block">Total Questions</Label>
+              <div className="space-y-2 p-4 rounded-lg border-2 border-blue-400 bg-gradient-to-b from-blue-100 via-blue-200 to-blue-300 text-blue-900 shadow-lg transform hover:scale-105 transition-all duration-200"
+                   style={{
+                     textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                     boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                   }}>
+                <Label htmlFor="totalQuestions" className="text-sm font-semibold text-center block">Total Questions</Label>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-gray-800 mb-3">{config.totalQuestions}</div>
+                  <div className="text-4xl font-bold text-blue-900 mb-3">{config.totalQuestions}</div>
                   <Input
                     id="totalQuestions"
                     type="number"
                     value={config.totalQuestions}
                     onChange={(e) => handleTotalQuestionsChange(parseInt(e.target.value) || 0)}
-                    className="text-center font-semibold text-lg"
+                    className="text-center font-semibold text-lg bg-white text-blue-900"
                   />
                 </div>
               </div>
 
               {/* Easy Questions */}
-              <div className="space-y-2 bg-green-100 p-4 rounded-lg text-gray-800">
-                <Label className="text-sm font-medium text-gray-800 text-center block">Easy Questions</Label>
+              <div className="space-y-2 p-4 rounded-lg border-2 border-green-400 bg-gradient-to-b from-green-100 via-green-200 to-green-300 text-green-900 shadow-lg transform hover:scale-105 transition-all duration-200"
+                   style={{
+                     textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                     boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                   }}>
+                <Label className="text-sm font-semibold text-green-900 text-center block">Easy Questions</Label>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-gray-800 mb-3">{config.easyQuestions}</div>
+                  <div className="text-4xl font-bold text-green-900 mb-3">{config.easyQuestions}</div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-center space-x-2">
                       <span className="text-sm">%</span>
@@ -140,7 +148,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       type="text"
                       value={easyPercentage}
                       onChange={(e) => handlePercentageChange('easy', parseInt(e.target.value) || 0)}
-                      className="text-center bg-white text-gray-800"
+                      className="text-center bg-white text-green-900"
                     />
                   </div>
                   <div className="space-y-2 mt-3">
@@ -152,7 +160,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       type="number"
                       value={config.easyMarks}
                       onChange={(e) => handleInputChange('easyMarks', parseInt(e.target.value) || 0)}
-                      className="text-center bg-white text-gray-800"
+                      className="text-center bg-white text-green-900"
                     />
                   </div>
                   <Input
@@ -160,16 +168,20 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                     placeholder="Time (seconds)"
                     value={config.easyTime}
                     onChange={(e) => handleInputChange('easyTime', parseInt(e.target.value) || 0)}
-                    className="mt-3 text-center bg-white text-gray-800"
+                    className="mt-3 text-center bg-white text-green-900"
                   />
                 </div>
               </div>
 
               {/* Medium Questions */}
-              <div className="space-y-2 bg-orange-100 p-4 rounded-lg text-gray-800">
-                <Label className="text-sm font-medium text-gray-800 text-center block">Medium Questions</Label>
+              <div className="space-y-2 p-4 rounded-lg border-2 border-orange-400 bg-gradient-to-b from-orange-100 via-orange-200 to-orange-300 text-orange-900 shadow-lg transform hover:scale-105 transition-all duration-200"
+                   style={{
+                     textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                     boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                   }}>
+                <Label className="text-sm font-semibold text-orange-900 text-center block">Medium Questions</Label>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-gray-800 mb-3">{config.mediumQuestions}</div>
+                  <div className="text-4xl font-bold text-orange-900 mb-3">{config.mediumQuestions}</div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-center space-x-2">
                       <span className="text-sm">%</span>
@@ -179,7 +191,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       type="text"
                       value={mediumPercentage}
                       onChange={(e) => handlePercentageChange('medium', parseInt(e.target.value) || 0)}
-                      className="text-center bg-white text-gray-800"
+                      className="text-center bg-white text-orange-900"
                     />
                   </div>
                   <div className="space-y-2 mt-3">
@@ -191,7 +203,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       type="number"
                       value={config.mediumMarks}
                       onChange={(e) => handleInputChange('mediumMarks', parseInt(e.target.value) || 0)}
-                      className="text-center bg-white text-gray-800"
+                      className="text-center bg-white text-orange-900"
                     />
                   </div>
                   <Input
@@ -199,16 +211,20 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                     placeholder="Time (seconds)"
                     value={config.mediumTime}
                     onChange={(e) => handleInputChange('mediumTime', parseInt(e.target.value) || 0)}
-                    className="mt-3 text-center bg-white text-gray-800"
+                    className="mt-3 text-center bg-white text-orange-900"
                   />
                 </div>
               </div>
 
               {/* Hard Questions */}
-              <div className="space-y-2 bg-red-100 p-4 rounded-lg text-gray-800">
-                <Label className="text-sm font-medium text-gray-800 text-center block">Hard Questions</Label>
+              <div className="space-y-2 p-4 rounded-lg border-2 border-red-400 bg-gradient-to-b from-red-100 via-red-200 to-red-300 text-red-900 shadow-lg transform hover:scale-105 transition-all duration-200"
+                   style={{
+                     textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                     boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                   }}>
+                <Label className="text-sm font-semibold text-red-900 text-center block">Hard Questions</Label>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-gray-800 mb-3">{config.hardQuestions}</div>
+                  <div className="text-4xl font-bold text-red-900 mb-3">{config.hardQuestions}</div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-center space-x-2">
                       <span className="text-sm">%</span>
@@ -218,7 +234,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       type="text"
                       value={hardPercentage}
                       onChange={(e) => handlePercentageChange('hard', parseInt(e.target.value) || 0)}
-                      className="text-center bg-white text-gray-800"
+                      className="text-center bg-white text-red-900"
                     />
                   </div>
                   <div className="space-y-2 mt-3">
@@ -230,7 +246,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       type="number"
                       value={config.hardMarks}
                       onChange={(e) => handleInputChange('hardMarks', parseInt(e.target.value) || 0)}
-                      className="text-center bg-white text-gray-800"
+                      className="text-center bg-white text-red-900"
                     />
                   </div>
                   <Input
@@ -238,7 +254,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                     placeholder="Time (seconds)"
                     value={config.hardTime}
                     onChange={(e) => handleInputChange('hardTime', parseInt(e.target.value) || 0)}
-                    className="mt-3 text-center bg-white text-gray-800"
+                    className="mt-3 text-center bg-white text-red-900"
                   />
                 </div>
               </div>
