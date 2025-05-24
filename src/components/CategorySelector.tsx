@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -45,25 +44,41 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
       return;
     }
 
+    // Count total subcategories across all selected categories
     const totalSelectedSubcategories = selectedCategories.reduce((total, cat) => total + cat.subcategories.length, 0);
     if (totalSelectedSubcategories === 0) {
       onCategoriesChange(updatedCategories);
       return;
     }
 
+    // Calculate questions per subcategory
     const easyPerSubcat = Math.floor(config.easyQuestions / totalSelectedSubcategories);
     const mediumPerSubcat = Math.floor(config.mediumQuestions / totalSelectedSubcategories);
     const hardPerSubcat = Math.floor(config.hardQuestions / totalSelectedSubcategories);
 
+    // Calculate remainders for distribution
+    const easyRemainder = config.easyQuestions % totalSelectedSubcategories;
+    const mediumRemainder = config.mediumQuestions % totalSelectedSubcategories;
+    const hardRemainder = config.hardQuestions % totalSelectedSubcategories;
+
+    let subcategoryIndex = 0;
     const categoriesWithDistribution = updatedCategories.map(cat => {
       if (!cat.selected) return cat;
 
-      const updatedSubcategories = cat.subcategories.map(sub => ({
-        ...sub,
-        easy: easyPerSubcat,
-        medium: mediumPerSubcat,
-        hard: hardPerSubcat,
-      }));
+      const updatedSubcategories = cat.subcategories.map(sub => {
+        const easyQuestions = easyPerSubcat + (subcategoryIndex < easyRemainder ? 1 : 0);
+        const mediumQuestions = mediumPerSubcat + (subcategoryIndex < mediumRemainder ? 1 : 0);
+        const hardQuestions = hardPerSubcat + (subcategoryIndex < hardRemainder ? 1 : 0);
+        
+        subcategoryIndex++;
+        
+        return {
+          ...sub,
+          easy: easyQuestions,
+          medium: mediumQuestions,
+          hard: hardQuestions,
+        };
+      });
 
       return { ...cat, subcategories: updatedSubcategories };
     });
