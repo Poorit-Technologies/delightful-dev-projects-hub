@@ -49,7 +49,7 @@ const TestConfigurationApp = () => {
     easyMarks: 1,
     mediumMarks: 2,
     hardMarks: 3,
-    smartDistribution: true,
+    smartDistribution: false,
   });
 
   const [categories, setCategories] = useState<Category[]>([

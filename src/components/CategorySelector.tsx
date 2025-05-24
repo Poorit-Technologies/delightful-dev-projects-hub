@@ -29,31 +29,34 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
     const updatedCategories = categories.map(cat =>
       cat.id === categoryId ? { ...cat, selected: !cat.selected } : cat
     );
-    onCategoriesChange(updatedCategories);
     
     // Apply smart distribution if enabled
     if (config.smartDistribution) {
       applySmartDistribution(updatedCategories);
+    } else {
+      onCategoriesChange(updatedCategories);
     }
   };
 
   const applySmartDistribution = (updatedCategories: Category[]) => {
     const selectedCategories = updatedCategories.filter(cat => cat.selected);
-    if (selectedCategories.length === 0) return;
+    if (selectedCategories.length === 0) {
+      onCategoriesChange(updatedCategories);
+      return;
+    }
 
-    const totalEasy = config.easyQuestions;
-    const totalMedium = config.mediumQuestions;
-    const totalHard = config.hardQuestions;
+    const totalSelectedSubcategories = selectedCategories.reduce((total, cat) => total + cat.subcategories.length, 0);
+    if (totalSelectedSubcategories === 0) {
+      onCategoriesChange(updatedCategories);
+      return;
+    }
+
+    const easyPerSubcat = Math.floor(config.easyQuestions / totalSelectedSubcategories);
+    const mediumPerSubcat = Math.floor(config.mediumQuestions / totalSelectedSubcategories);
+    const hardPerSubcat = Math.floor(config.hardQuestions / totalSelectedSubcategories);
 
     const categoriesWithDistribution = updatedCategories.map(cat => {
       if (!cat.selected) return cat;
-
-      const totalSubcategories = cat.subcategories.length;
-      if (totalSubcategories === 0) return cat;
-
-      const easyPerSubcat = Math.floor(totalEasy / selectedCategories.length / totalSubcategories);
-      const mediumPerSubcat = Math.floor(totalMedium / selectedCategories.length / totalSubcategories);
-      const hardPerSubcat = Math.floor(totalHard / selectedCategories.length / totalSubcategories);
 
       const updatedSubcategories = cat.subcategories.map(sub => ({
         ...sub,
@@ -149,65 +152,73 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
                     {/* Subcategory Rows */}
                     {category.subcategories.map((subcategory) => (
                       <div key={subcategory.id} className="mb-4 p-3 border border-gray-100 rounded-lg">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-4">
+                          {/* Subcategory Name */}
+                          <div className="flex items-center space-x-2 min-w-[200px]">
                             <span className="text-sm font-medium">{subcategory.name}</span>
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => deleteSubcategory(category.id, subcategory.id)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 h-6 w-6 p-0"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3" />
                             </Button>
                           </div>
-                        </div>
-                        
-                        <div className="flex items-center space-x-4">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
-                          >
-                            Easy
-                          </Button>
-                          <Input
-                            type="number"
-                            value={subcategory.easy}
-                            onChange={(e) => updateSubcategory(category.id, subcategory.id, 'easy', parseInt(e.target.value) || 0)}
-                            className="w-20 text-center"
-                            min="0"
-                          />
+
+                          {/* Easy */}
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200 h-8"
+                            >
+                              Easy
+                            </Button>
+                            <Input
+                              type="number"
+                              value={subcategory.easy}
+                              onChange={(e) => updateSubcategory(category.id, subcategory.id, 'easy', parseInt(e.target.value) || 0)}
+                              className="w-16 h-8 text-center bg-green-50 border-green-200"
+                              min="0"
+                            />
+                          </div>
                           
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200"
-                          >
-                            Medium
-                          </Button>
-                          <Input
-                            type="number"
-                            value={subcategory.medium}
-                            onChange={(e) => updateSubcategory(category.id, subcategory.id, 'medium', parseInt(e.target.value) || 0)}
-                            className="w-20 text-center"
-                            min="0"
-                          />
+                          {/* Medium */}
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200 h-8"
+                            >
+                              Medium
+                            </Button>
+                            <Input
+                              type="number"
+                              value={subcategory.medium}
+                              onChange={(e) => updateSubcategory(category.id, subcategory.id, 'medium', parseInt(e.target.value) || 0)}
+                              className="w-16 h-8 text-center bg-orange-50 border-orange-200"
+                              min="0"
+                            />
+                          </div>
                           
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-                          >
-                            Hard
-                          </Button>
-                          <Input
-                            type="number"
-                            value={subcategory.hard}
-                            onChange={(e) => updateSubcategory(category.id, subcategory.id, 'hard', parseInt(e.target.value) || 0)}
-                            className="w-20 text-center"
-                            min="0"
-                          />
+                          {/* Hard */}
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200 h-8"
+                            >
+                              Hard
+                            </Button>
+                            <Input
+                              type="number"
+                              value={subcategory.hard}
+                              onChange={(e) => updateSubcategory(category.id, subcategory.id, 'hard', parseInt(e.target.value) || 0)}
+                              className="w-16 h-8 text-center bg-red-50 border-red-200"
+                              min="0"
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}
