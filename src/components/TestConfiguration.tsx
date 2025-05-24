@@ -1,3 +1,4 @@
+
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -169,7 +170,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
               </div>
 
               {/* Easy Questions */}
-              <div className="space-y-2 p-6 rounded-xl border-2 border-green-300 bg-gradient-to-b from-green-50 via-green-100 to-green-200 text-green-900 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+              <div className="space-y-3 p-6 rounded-xl border-2 border-green-300 bg-gradient-to-b from-green-50 via-green-100 to-green-200 text-green-900 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                    style={{
                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                      boxShadow: '0 8px 25px rgba(34, 197, 94, 0.15), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
@@ -177,8 +178,11 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 <Label className="text-sm font-semibold text-green-900 text-center block">Easy Questions</Label>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-green-900 mb-3">{config.easyQuestions}</div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center space-x-2">
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
                       <span className="text-sm">%</span>
                       <span className="text-sm">Percentage</span>
                     </div>
@@ -189,8 +193,9 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       className="text-center bg-white/90 text-green-900 border-green-200 focus:border-green-400"
                     />
                   </div>
-                  <div className="space-y-2 mt-3">
-                    <div className="flex items-center justify-center space-x-2">
+                  
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
                       <span className="text-sm">📊</span>
                       <span className="text-sm">Marks</span>
                     </div>
@@ -201,18 +206,24 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       className="text-center bg-white/90 text-green-900 border-green-200 focus:border-green-400"
                     />
                   </div>
-                  <Input
-                    type="number"
-                    placeholder="Time (seconds)"
-                    value={config.easyTime}
-                    onChange={(e) => handleInputChange('easyTime', parseInt(e.target.value) || 0)}
-                    className="mt-3 text-center bg-white/90 text-green-900 border-green-200 focus:border-green-400"
-                  />
+                  
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <span className="text-sm">⏱️</span>
+                      <span className="text-sm">Time (sec)</span>
+                    </div>
+                    <Input
+                      type="number"
+                      value={config.easyTime}
+                      onChange={(e) => handleInputChange('easyTime', parseInt(e.target.value) || 0)}
+                      className="text-center bg-white/90 text-green-900 border-green-200 focus:border-green-400"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Medium Questions */}
-              <div className="space-y-2 p-6 rounded-xl border-2 border-orange-300 bg-gradient-to-b from-orange-50 via-orange-100 to-orange-200 text-orange-900 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+              <div className="space-y-3 p-6 rounded-xl border-2 border-orange-300 bg-gradient-to-b from-orange-50 via-orange-100 to-orange-200 text-orange-900 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                    style={{
                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                      boxShadow: '0 8px 25px rgba(249, 115, 22, 0.15), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
@@ -220,8 +231,11 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 <Label className="text-sm font-semibold text-orange-900 text-center block">Medium Questions</Label>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-orange-900 mb-3">{config.mediumQuestions}</div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center space-x-2">
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
                       <span className="text-sm">%</span>
                       <span className="text-sm">Percentage</span>
                     </div>
@@ -232,8 +246,9 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       className="text-center bg-white/90 text-orange-900 border-orange-200 focus:border-orange-400"
                     />
                   </div>
-                  <div className="space-y-2 mt-3">
-                    <div className="flex items-center justify-center space-x-2">
+                  
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
                       <span className="text-sm">📊</span>
                       <span className="text-sm">Marks</span>
                     </div>
@@ -244,18 +259,24 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       className="text-center bg-white/90 text-orange-900 border-orange-200 focus:border-orange-400"
                     />
                   </div>
-                  <Input
-                    type="number"
-                    placeholder="Time (seconds)"
-                    value={config.mediumTime}
-                    onChange={(e) => handleInputChange('mediumTime', parseInt(e.target.value) || 0)}
-                    className="mt-3 text-center bg-white/90 text-orange-900 border-orange-200 focus:border-orange-400"
-                  />
+                  
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <span className="text-sm">⏱️</span>
+                      <span className="text-sm">Time (sec)</span>
+                    </div>
+                    <Input
+                      type="number"
+                      value={config.mediumTime}
+                      onChange={(e) => handleInputChange('mediumTime', parseInt(e.target.value) || 0)}
+                      className="text-center bg-white/90 text-orange-900 border-orange-200 focus:border-orange-400"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Hard Questions */}
-              <div className="space-y-2 p-6 rounded-xl border-2 border-red-300 bg-gradient-to-b from-red-50 via-red-100 to-red-200 text-red-900 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+              <div className="space-y-3 p-6 rounded-xl border-2 border-red-300 bg-gradient-to-b from-red-50 via-red-100 to-red-200 text-red-900 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                    style={{
                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                      boxShadow: '0 8px 25px rgba(239, 68, 68, 0.15), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
@@ -263,8 +284,11 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 <Label className="text-sm font-semibold text-red-900 text-center block">Hard Questions</Label>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-red-900 mb-3">{config.hardQuestions}</div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center space-x-2">
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
                       <span className="text-sm">%</span>
                       <span className="text-sm">Percentage</span>
                     </div>
@@ -275,8 +299,9 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       className="text-center bg-white/90 text-red-900 border-red-200 focus:border-red-400"
                     />
                   </div>
-                  <div className="space-y-2 mt-3">
-                    <div className="flex items-center justify-center space-x-2">
+                  
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
                       <span className="text-sm">📊</span>
                       <span className="text-sm">Marks</span>
                     </div>
@@ -287,13 +312,19 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       className="text-center bg-white/90 text-red-900 border-red-200 focus:border-red-400"
                     />
                   </div>
-                  <Input
-                    type="number"
-                    placeholder="Time (seconds)"
-                    value={config.hardTime}
-                    onChange={(e) => handleInputChange('hardTime', parseInt(e.target.value) || 0)}
-                    className="mt-3 text-center bg-white/90 text-red-900 border-red-200 focus:border-red-400"
-                  />
+                  
+                  <div>
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <span className="text-sm">⏱️</span>
+                      <span className="text-sm">Time (sec)</span>
+                    </div>
+                    <Input
+                      type="number"
+                      value={config.hardTime}
+                      onChange={(e) => handleInputChange('hardTime', parseInt(e.target.value) || 0)}
+                      className="text-center bg-white/90 text-red-900 border-red-200 focus:border-red-400"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
