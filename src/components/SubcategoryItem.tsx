@@ -1,6 +1,5 @@
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Trash2 } from 'lucide-react';
 import { Subcategory } from './TestConfigurationApp';
 
@@ -14,14 +13,13 @@ interface SubcategoryItemProps {
 const SubcategoryItem = ({
   subcategory,
   categoryId,
-  onUpdateSubcategory,
   onDeleteSubcategory,
 }: SubcategoryItemProps) => {
   return (
     <div className="mb-4 p-3 border border-gray-100 rounded-lg">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-between">
         {/* Subcategory Name */}
-        <div className="flex items-center space-x-2 min-w-[200px]">
+        <div className="flex items-center space-x-2">
           <span className="text-sm font-medium">{subcategory.name}</span>
           <Button
             variant="outline"
@@ -33,63 +31,29 @@ const SubcategoryItem = ({
           </Button>
         </div>
 
-        {/* 3D Difficulty Buttons */}
+        {/* Display current values */}
         <div className="flex items-center space-x-2">
-          <div className="bg-gradient-to-b from-green-100 via-green-200 to-green-300 text-green-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-green-400 transform hover:scale-105 transition-all duration-200"
+          <div className="bg-gradient-to-b from-green-100 via-green-200 to-green-300 text-green-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-green-400"
                style={{
                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                  boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
                }}>
-            Easy
+            {subcategory.easy}
           </div>
-          <div className="bg-gradient-to-b from-orange-100 via-orange-200 to-orange-300 text-orange-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-orange-400 transform hover:scale-105 transition-all duration-200"
+          <div className="bg-gradient-to-b from-orange-100 via-orange-200 to-orange-300 text-orange-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-orange-400"
                style={{
                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                  boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
                }}>
-            Medium
+            {subcategory.medium}
           </div>
-          <div className="bg-gradient-to-b from-red-100 via-red-200 to-red-300 text-red-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-red-400 transform hover:scale-105 transition-all duration-200"
+          <div className="bg-gradient-to-b from-red-100 via-red-200 to-red-300 text-red-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-red-400"
                style={{
                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
                  boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
                }}>
-            Hard
+            {subcategory.hard}
           </div>
-        </div>
-
-        {/* Input Fields */}
-        <div className="flex items-center space-x-2">
-          <Input
-            type="number"
-            value={subcategory.easy}
-            onChange={(e) => onUpdateSubcategory(categoryId, subcategory.id, 'easy', parseInt(e.target.value) || 0)}
-            className="w-16 h-8 text-center bg-gradient-to-b from-green-100 via-green-200 to-green-300 text-green-900 border-2 border-green-400 font-semibold"
-            style={{
-              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-            }}
-            min="0"
-          />
-          <Input
-            type="number"
-            value={subcategory.medium}
-            onChange={(e) => onUpdateSubcategory(categoryId, subcategory.id, 'medium', parseInt(e.target.value) || 0)}
-            className="w-16 h-8 text-center bg-gradient-to-b from-orange-100 via-orange-200 to-orange-300 text-orange-900 border-2 border-orange-400 font-semibold"
-            style={{
-              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-            }}
-            min="0"
-          />
-          <Input
-            type="number"
-            value={subcategory.hard}
-            onChange={(e) => onUpdateSubcategory(categoryId, subcategory.id, 'hard', parseInt(e.target.value) || 0)}
-            className="w-16 h-8 text-center bg-gradient-to-b from-red-100 via-red-200 to-red-300 text-red-900 border-2 border-red-400 font-semibold"
-            style={{
-              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-            }}
-            min="0"
-          />
         </div>
       </div>
     </div>
