@@ -123,7 +123,13 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
       }
       return cat;
     });
-    onCategoriesChange(updatedCategories);
+    
+    // If smart distribution is enabled, redistribute the questions
+    if (config.smartDistribution) {
+      applySmartDistribution(updatedCategories);
+    } else {
+      onCategoriesChange(updatedCategories);
+    }
   };
 
   const addSubcategory = (categoryId: string) => {
@@ -219,19 +225,17 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
                     
                     {/* Beautified Total - Right Justified */}
                     <div className="text-right">
-                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-3 py-2 rounded-lg border border-blue-200 shadow-sm">
-                        <div className="text-lg font-bold text-blue-800 mb-1">
-                          Total: {totals.total}
-                        </div>
-                        <div className="flex space-x-3 text-sm">
+                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-4 py-2 rounded-lg border border-blue-200 shadow-sm">
+                        <div className="flex items-center space-x-3 text-sm">
+                          <span className="text-lg font-bold text-blue-800">Total: {totals.total}</span>
                           <span className="bg-green-100 text-green-800 px-2 py-1 rounded font-medium">
-                            E: {totals.easy}
+                            Easy: {totals.easy}
                           </span>
                           <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded font-medium">
-                            M: {totals.medium}
+                            Medium: {totals.medium}
                           </span>
                           <span className="bg-red-100 text-red-800 px-2 py-1 rounded font-medium">
-                            H: {totals.hard}
+                            Hard: {totals.hard}
                           </span>
                         </div>
                       </div>

@@ -69,6 +69,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
         variant: "default",
       });
     } else {
+      // Only show error if total is not 100%
       toast({
         title: "Validation Error",
         description: `Total percentage must equal 100%. Current total: ${totalPercentage}%`,
@@ -84,7 +85,14 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
     
     // If relatedTarget is null or not contained within the current section, validate
     if (!relatedTarget || !currentTarget.contains(relatedTarget)) {
-      validatePercentages();
+      const totalPercentage = easyPercentage + mediumPercentage + hardPercentage;
+      // Only validate and show error if the total is not 100%
+      if (totalPercentage !== 100) {
+        validatePercentages();
+      } else if (totalPercentage === 100) {
+        // If validation passes, collapse the section without showing success toast
+        setIsOpen(false);
+      }
     }
   };
 
