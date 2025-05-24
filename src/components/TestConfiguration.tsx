@@ -15,7 +15,7 @@ interface TestConfigurationProps {
 }
 
 const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (field: keyof TestConfig, value: number | boolean) => {

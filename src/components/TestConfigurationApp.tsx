@@ -124,9 +124,9 @@ const TestConfigurationApp = () => {
           config={testConfig}
         />
         
-        <ActionButtons />
-        
         <ConfigurationSummary config={testConfig} />
+        
+        <ActionButtons />
       </div>
     </div>
   );
