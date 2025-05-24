@@ -40,8 +40,8 @@ export interface Category {
 const TestConfigurationApp = () => {
   const [testConfig, setTestConfig] = useState<TestConfig>({
     totalQuestions: 100,
-    easyQuestions: 40,
-    mediumQuestions: 40,
+    easyQuestions: 50,
+    mediumQuestions: 30,
     hardQuestions: 20,
     easyTime: 40,
     mediumTime: 60,

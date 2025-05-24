@@ -1,4 +1,3 @@
-
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,9 +14,41 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
     onConfigChange({ [field]: value });
   };
 
+  const handleTotalQuestionsChange = (total: number) => {
+    const easyCount = Math.round((50 / 100) * total);
+    const mediumCount = Math.round((30 / 100) * total);
+    const hardCount = total - easyCount - mediumCount;
+    
+    onConfigChange({ 
+      totalQuestions: total,
+      easyQuestions: easyCount,
+      mediumQuestions: mediumCount,
+      hardQuestions: hardCount
+    });
+  };
+
   const handlePercentageChange = (difficulty: 'easy' | 'medium' | 'hard', percentage: number) => {
     const totalQuestions = config.totalQuestions;
     const newCount = Math.round((percentage / 100) * totalQuestions);
+    
+    // Calculate the total percentage to validate it doesn't exceed 100
+    let easyPercent = calculatePercentage(config.easyQuestions);
+    let mediumPercent = calculatePercentage(config.mediumQuestions);
+    let hardPercent = calculatePercentage(config.hardQuestions);
+    
+    if (difficulty === 'easy') {
+      easyPercent = percentage;
+    } else if (difficulty === 'medium') {
+      mediumPercent = percentage;
+    } else if (difficulty === 'hard') {
+      hardPercent = percentage;
+    }
+    
+    // Validate total percentage is 100
+    const totalPercent = easyPercent + mediumPercent + hardPercent;
+    if (totalPercent > 100) {
+      return; // Don't allow change if it exceeds 100%
+    }
     
     if (difficulty === 'easy') {
       onConfigChange({ easyQuestions: newCount });
@@ -32,6 +63,12 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
     return config.totalQuestions > 0 ? Math.round((count / config.totalQuestions) * 100) : 0;
   };
 
+  const getTotalPercentage = () => {
+    return calculatePercentage(config.easyQuestions) + 
+           calculatePercentage(config.mediumQuestions) + 
+           calculatePercentage(config.hardQuestions);
+  };
+
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold text-blue-600 mb-4">Test Configuration</h2>
@@ -39,17 +76,26 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
         Configure your test parameters and question distribution with intelligent distribution
       </p>
 
+      {/* Percentage Validation Warning */}
+      {getTotalPercentage() !== 100 && (
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-800">
+            Total percentage must equal 100%. Current total: {getTotalPercentage()}%
+          </p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Total Questions */}
         <div className="space-y-2 bg-blue-50 p-4 rounded-lg border border-gray-200">
           <Label htmlFor="totalQuestions" className="text-sm font-medium text-center block">Total Questions</Label>
           <div className="text-center">
-            <div className="text-4xl font-bold text-gray-800 mb-3">100</div>
+            <div className="text-4xl font-bold text-gray-800 mb-3">{config.totalQuestions}</div>
             <Input
               id="totalQuestions"
               type="number"
               value={config.totalQuestions}
-              onChange={(e) => handleInputChange('totalQuestions', parseInt(e.target.value) || 0)}
+              onChange={(e) => handleTotalQuestionsChange(parseInt(e.target.value) || 0)}
               className="text-center font-semibold text-lg"
             />
           </div>
@@ -70,6 +116,8 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 value={calculatePercentage(config.easyQuestions)}
                 onChange={(e) => handlePercentageChange('easy', parseInt(e.target.value) || 0)}
                 className="text-center bg-white text-gray-800"
+                max="100"
+                min="0"
               />
             </div>
             <div className="space-y-2 mt-3">
@@ -109,6 +157,8 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 value={calculatePercentage(config.mediumQuestions)}
                 onChange={(e) => handlePercentageChange('medium', parseInt(e.target.value) || 0)}
                 className="text-center bg-white text-gray-800"
+                max="100"
+                min="0"
               />
             </div>
             <div className="space-y-2 mt-3">
@@ -148,6 +198,8 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 value={calculatePercentage(config.hardQuestions)}
                 onChange={(e) => handlePercentageChange('hard', parseInt(e.target.value) || 0)}
                 className="text-center bg-white text-gray-800"
+                max="100"
+                min="0"
               />
             </div>
             <div className="space-y-2 mt-3">
