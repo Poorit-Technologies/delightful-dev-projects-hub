@@ -31,82 +31,88 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
             type="number"
             value={config.totalQuestions}
             onChange={(e) => handleInputChange('totalQuestions', parseInt(e.target.value) || 0)}
-            className="text-center font-semibold"
+            className="text-center font-semibold text-lg h-16"
           />
         </div>
 
         {/* Easy Questions */}
-        <div className="space-y-2">
+        <div className="space-y-2 bg-green-50 p-4 rounded-lg border border-green-200">
           <Label className="text-sm font-medium text-green-600">Easy Questions (40%)</Label>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600 mb-2">{config.easyQuestions}</div>
+            <div className="text-4xl font-bold text-green-600 mb-3">{config.easyQuestions}</div>
             <Input
               type="number"
               placeholder="Time (seconds)"
               value={config.easyTime}
               onChange={(e) => handleInputChange('easyTime', parseInt(e.target.value) || 0)}
-              className="mb-2"
+              className="mb-3 text-center"
             />
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">📊</span>
-              <span className="text-sm">Marks for Easy Questions</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center space-x-2">
+                <span className="text-sm">📊</span>
+                <span className="text-sm">Marks</span>
+              </div>
+              <Input
+                type="number"
+                value={config.easyMarks}
+                onChange={(e) => handleInputChange('easyMarks', parseInt(e.target.value) || 0)}
+                className="text-center"
+              />
             </div>
-            <Input
-              type="number"
-              value={config.easyMarks}
-              onChange={(e) => handleInputChange('easyMarks', parseInt(e.target.value) || 0)}
-              className="mt-2"
-            />
           </div>
         </div>
 
         {/* Medium Questions */}
-        <div className="space-y-2">
+        <div className="space-y-2 bg-orange-50 p-4 rounded-lg border border-orange-200">
           <Label className="text-sm font-medium text-orange-600">Medium Questions (40%)</Label>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600 mb-2">{config.mediumQuestions}</div>
+            <div className="text-4xl font-bold text-orange-600 mb-3">{config.mediumQuestions}</div>
             <Input
               type="number"
               placeholder="Time (seconds)"
               value={config.mediumTime}
               onChange={(e) => handleInputChange('mediumTime', parseInt(e.target.value) || 0)}
-              className="mb-2"
+              className="mb-3 text-center"
             />
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">📊</span>
-              <span className="text-sm">Marks for Medium Questions</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center space-x-2">
+                <span className="text-sm">📊</span>
+                <span className="text-sm">Marks</span>
+              </div>
+              <Input
+                type="number"
+                value={config.mediumMarks}
+                onChange={(e) => handleInputChange('mediumMarks', parseInt(e.target.value) || 0)}
+                className="text-center"
+              />
             </div>
-            <Input
-              type="number"
-              value={config.mediumMarks}
-              onChange={(e) => handleInputChange('mediumMarks', parseInt(e.target.value) || 0)}
-              className="mt-2"
-            />
           </div>
         </div>
 
         {/* Hard Questions */}
-        <div className="space-y-2">
+        <div className="space-y-2 bg-red-50 p-4 rounded-lg border border-red-200">
           <Label className="text-sm font-medium text-red-600">Hard Questions (20%)</Label>
           <div className="text-center">
-            <div className="text-2xl font-bold text-red-600 mb-2">{config.hardQuestions}</div>
+            <div className="text-4xl font-bold text-red-600 mb-3">{config.hardQuestions}</div>
             <Input
               type="number"
               placeholder="Time (seconds)"
               value={config.hardTime}
               onChange={(e) => handleInputChange('hardTime', parseInt(e.target.value) || 0)}
-              className="mb-2"
+              className="mb-3 text-center"
             />
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">📊</span>
-              <span className="text-sm">Marks for Hard Questions</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center space-x-2">
+                <span className="text-sm">📊</span>
+                <span className="text-sm">Marks</span>
+              </div>
+              <Input
+                type="number"
+                value={config.hardMarks}
+                onChange={(e) => handleInputChange('hardMarks', parseInt(e.target.value) || 0)}
+                className="text-center"
+              />
             </div>
-            <Input
-              type="number"
-              value={config.hardMarks}
-              onChange={(e) => handleInputChange('hardMarks', parseInt(e.target.value) || 0)}
-              className="mt-2"
-            />
           </div>
         </div>
       </div>
