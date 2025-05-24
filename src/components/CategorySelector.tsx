@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -181,7 +182,14 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
       }
       return cat;
     });
-    onCategoriesChange(updatedCategories);
+    
+    // If the category is selected and smart distribution is enabled, redistribute questions
+    const category = categories.find(cat => cat.id === categoryId);
+    if (category?.selected && config.smartDistribution) {
+      applySmartDistribution(updatedCategories);
+    } else {
+      onCategoriesChange(updatedCategories);
+    }
   };
 
   return (
