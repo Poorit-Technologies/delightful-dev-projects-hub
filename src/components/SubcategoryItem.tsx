@@ -19,9 +19,9 @@ const SubcategoryItem = ({
 }: SubcategoryItemProps) => {
   return (
     <div className="mb-4 p-3 border border-gray-100 rounded-lg">
-      <div className="flex items-center space-x-4">
+      <div className="grid grid-cols-4 gap-4 items-center">
         {/* Subcategory Name */}
-        <div className="flex items-center space-x-2 min-w-[200px]">
+        <div className="flex items-center space-x-2">
           <span className="text-sm font-medium">{subcategory.name}</span>
           <Button
             variant="outline"
@@ -33,33 +33,8 @@ const SubcategoryItem = ({
           </Button>
         </div>
 
-        {/* 3D Difficulty Buttons */}
-        <div className="flex items-center space-x-2">
-          <div className="bg-gradient-to-b from-green-100 via-green-200 to-green-300 text-green-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-green-400 transform hover:scale-105 transition-all duration-200"
-               style={{
-                 textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                 boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
-               }}>
-            Easy
-          </div>
-          <div className="bg-gradient-to-b from-orange-100 via-orange-200 to-orange-300 text-orange-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-orange-400 transform hover:scale-105 transition-all duration-200"
-               style={{
-                 textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                 boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
-               }}>
-            Medium
-          </div>
-          <div className="bg-gradient-to-b from-red-100 via-red-200 to-red-300 text-red-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-red-400 transform hover:scale-105 transition-all duration-200"
-               style={{
-                 textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                 boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
-               }}>
-            Hard
-          </div>
-        </div>
-
-        {/* Input Fields */}
-        <div className="flex items-center space-x-2">
+        {/* Easy Questions Input - Aligned with Easy column */}
+        <div className="flex flex-col items-center space-y-2">
           <Input
             type="number"
             value={subcategory.easy}
@@ -70,6 +45,10 @@ const SubcategoryItem = ({
             }}
             min="0"
           />
+        </div>
+
+        {/* Medium Questions Input - Aligned with Medium column */}
+        <div className="flex flex-col items-center space-y-2">
           <Input
             type="number"
             value={subcategory.medium}
@@ -80,6 +59,10 @@ const SubcategoryItem = ({
             }}
             min="0"
           />
+        </div>
+
+        {/* Hard Questions Input - Aligned with Hard column */}
+        <div className="flex flex-col items-center space-y-2">
           <Input
             type="number"
             value={subcategory.hard}
