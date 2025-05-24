@@ -27,9 +27,23 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
   };
 
   const toggleCategorySelection = (categoryId: string) => {
-    const updatedCategories = categories.map(cat =>
-      cat.id === categoryId ? { ...cat, selected: !cat.selected } : cat
-    );
+    const updatedCategories = categories.map(cat => {
+      if (cat.id === categoryId) {
+        const newSelected = !cat.selected;
+        // If deselecting category, clear all subcategory values
+        if (!newSelected) {
+          const clearedSubcategories = cat.subcategories.map(sub => ({
+            ...sub,
+            easy: 0,
+            medium: 0,
+            hard: 0,
+          }));
+          return { ...cat, selected: newSelected, subcategories: clearedSubcategories };
+        }
+        return { ...cat, selected: newSelected };
+      }
+      return cat;
+    });
     
     // Apply smart distribution if enabled
     if (config.smartDistribution) {
@@ -206,26 +220,38 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
                                   </Button>
                                 </div>
 
-                                {/* Difficulty Buttons */}
+                                {/* 3D Difficulty Buttons */}
                                 <div className="flex items-center space-x-2">
                                   <Button 
                                     variant="outline" 
                                     size="sm"
-                                    className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200 h-8"
+                                    className="bg-gradient-to-b from-green-100 to-green-200 hover:from-green-200 hover:to-green-300 text-green-800 border-green-300 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 h-8 border-2"
+                                    style={{
+                                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)'
+                                    }}
                                   >
                                     Easy
                                   </Button>
                                   <Button 
                                     variant="outline" 
                                     size="sm"
-                                    className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200 h-8"
+                                    className="bg-gradient-to-b from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300 text-orange-800 border-orange-300 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 h-8 border-2"
+                                    style={{
+                                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)'
+                                    }}
                                   >
                                     Medium
                                   </Button>
                                   <Button 
                                     variant="outline" 
                                     size="sm"
-                                    className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200 h-8"
+                                    className="bg-gradient-to-b from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 text-red-800 border-red-300 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 h-8 border-2"
+                                    style={{
+                                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)'
+                                    }}
                                   >
                                     Hard
                                   </Button>

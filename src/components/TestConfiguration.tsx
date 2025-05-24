@@ -69,6 +69,17 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
     }
   };
 
+  const handleSectionBlur = (e: React.FocusEvent) => {
+    // Check if the focus is moving outside the Test Configuration section
+    const currentTarget = e.currentTarget;
+    const relatedTarget = e.relatedTarget as Node;
+    
+    // If relatedTarget is null or not contained within the current section, validate
+    if (!relatedTarget || !currentTarget.contains(relatedTarget)) {
+      validatePercentages();
+    }
+  };
+
   return (
     <Card className="p-6">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -78,19 +89,10 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
         </CollapsibleTrigger>
         
         <CollapsibleContent>
-          <div onBlur={validatePercentages}>
+          <div onBlur={handleSectionBlur}>
             <p className="text-sm text-gray-600 mb-6">
               Configure your test parameters and question distribution with intelligent distribution
             </p>
-
-            {/* Percentage Validation Warning */}
-            {getTotalPercentage() !== 100 && (
-              <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  Total percentage must equal 100%. Current total: {getTotalPercentage()}%
-                </p>
-              </div>
-            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Total Questions */}
