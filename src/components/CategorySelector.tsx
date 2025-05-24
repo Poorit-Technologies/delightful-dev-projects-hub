@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, FolderOpen, CheckCircle, AlertCircle } from 'lucide-react';
 import { Category, Subcategory, TestConfig } from './TestConfigurationApp';
 import CategoryHeader from './CategoryHeader';
 import CategoryTotals from './CategoryTotals';
@@ -15,6 +15,12 @@ interface CategorySelectorProps {
 
 const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySelectorProps) => {
   const [isMainCollapsed, setIsMainCollapsed] = useState(true);
+
+  const selectedCategories = categories.filter(cat => cat.selected);
+  const hasSelectedCategories = selectedCategories.length > 0;
+  const totalQuestions = selectedCategories.reduce((total, cat) => {
+    return total + cat.subcategories.reduce((subTotal, sub) => subTotal + sub.easy + sub.medium + sub.hard, 0);
+  }, 0);
 
   const toggleCategory = (categoryId: string) => {
     const updatedCategories = categories.map(cat =>
@@ -179,38 +185,80 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
   };
 
   return (
-    <Card className="p-6">
+    <Card className="p-0 overflow-hidden backdrop-blur-sm bg-white/80 border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300">
       <Collapsible open={!isMainCollapsed} onOpenChange={(open) => setIsMainCollapsed(!open)}>
-        <CollapsibleTrigger className="flex items-center justify-between w-full">
-          <h2 className="text-xl font-semibold text-blue-600">Select Categories & Subcategories</h2>
-          {!isMainCollapsed ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+        <CollapsibleTrigger className="w-full group">
+          <div className={`flex items-center justify-between p-6 transition-all duration-300 ${
+            !isMainCollapsed 
+              ? 'bg-gradient-to-r from-blue-50 to-indigo-50' 
+              : hasSelectedCategories
+                ? 'bg-gradient-to-r from-green-50 via-blue-50 to-green-50 hover:from-green-100 hover:to-blue-100'
+                : 'bg-gradient-to-r from-gray-50 via-slate-50 to-gray-50 hover:from-gray-100 hover:to-slate-100'
+          } border-l-4 ${
+            hasSelectedCategories ? 'border-l-green-400' : 'border-l-gray-400'
+          }`}>
+            <div className="flex items-center space-x-4">
+              <div className={`p-2 rounded-lg transition-all duration-300 ${
+                hasSelectedCategories 
+                  ? 'bg-green-100 text-green-600' 
+                  : 'bg-gray-100 text-gray-600'
+              }`}>
+                <FolderOpen className="h-5 w-5" />
+              </div>
+              <div className="text-left">
+                <h2 className="text-xl font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
+                  Select Categories & Subcategories
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  {hasSelectedCategories 
+                    ? `✅ ${selectedCategories.length} categories selected, ${totalQuestions} questions assigned`
+                    : `📂 Select categories to distribute questions`
+                  }
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              {hasSelectedCategories ? (
+                <CheckCircle className="h-5 w-5 text-green-500" />
+              ) : (
+                <AlertCircle className="h-5 w-5 text-gray-500" />
+              )}
+              {!isMainCollapsed ? (
+                <ChevronDown className="h-5 w-5 text-gray-500 group-hover:text-blue-600 transition-colors" />
+              ) : (
+                <ChevronRight className="h-5 w-5 text-gray-500 group-hover:text-blue-600 transition-colors" />
+              )}
+            </div>
+          </div>
         </CollapsibleTrigger>
 
-        <CollapsibleContent>
-          <div className="space-y-4 mt-4">
-            {categories.map((category) => (
-              <div key={category.id} className="border border-gray-200 rounded-lg">
-                {/* Category Header with Totals */}
-                <div className="flex items-center justify-between">
-                  <CategoryHeader
-                    category={category}
-                    onToggleCategory={toggleCategory}
-                    onToggleCategorySelection={toggleCategorySelection}
-                    onAddSubcategory={addSubcategory}
-                  />
-                  <div className="pr-4">
-                    <CategoryTotals category={category} />
+        <CollapsibleContent className="animate-accordion-down">
+          <div className="p-6 bg-gradient-to-br from-white to-gray-50">
+            <div className="space-y-4">
+              {categories.map((category) => (
+                <div key={category.id} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white/50 backdrop-blur-sm">
+                  {/* Category Header with Totals */}
+                  <div className="flex items-center justify-between">
+                    <CategoryHeader
+                      category={category}
+                      onToggleCategory={toggleCategory}
+                      onToggleCategorySelection={toggleCategorySelection}
+                      onAddSubcategory={addSubcategory}
+                    />
+                    <div className="pr-4">
+                      <CategoryTotals category={category} />
+                    </div>
                   </div>
-                </div>
 
-                {/* Subcategories */}
-                <SubcategoryList
-                  category={category}
-                  onUpdateSubcategory={updateSubcategory}
-                  onDeleteSubcategory={deleteSubcategory}
-                />
-              </div>
-            ))}
+                  {/* Subcategories */}
+                  <SubcategoryList
+                    category={category}
+                    onUpdateSubcategory={updateSubcategory}
+                    onDeleteSubcategory={deleteSubcategory}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </CollapsibleContent>
       </Collapsible>
