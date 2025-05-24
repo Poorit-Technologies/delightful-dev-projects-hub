@@ -16,15 +16,22 @@ interface TestConfigurationProps {
 
 const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [easyPercentage, setEasyPercentage] = useState(calculatePercentage(config.easyQuestions));
+  const [mediumPercentage, setMediumPercentage] = useState(calculatePercentage(config.mediumQuestions));
+  const [hardPercentage, setHardPercentage] = useState(calculatePercentage(config.hardQuestions));
   const { toast } = useToast();
+
+  function calculatePercentage(count: number) {
+    return config.totalQuestions > 0 ? Math.round((count / config.totalQuestions) * 100) : 0;
+  }
 
   const handleInputChange = (field: keyof TestConfig, value: number | boolean) => {
     onConfigChange({ [field]: value });
   };
 
   const handleTotalQuestionsChange = (total: number) => {
-    const easyCount = Math.round((50 / 100) * total);
-    const mediumCount = Math.round((30 / 100) * total);
+    const easyCount = Math.round((easyPercentage / 100) * total);
+    const mediumCount = Math.round((mediumPercentage / 100) * total);
     const hardCount = total - easyCount - mediumCount;
     
     onConfigChange({ 
@@ -40,27 +47,28 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
     const newCount = Math.round((percentage / 100) * totalQuestions);
     
     if (difficulty === 'easy') {
+      setEasyPercentage(percentage);
       onConfigChange({ easyQuestions: newCount });
     } else if (difficulty === 'medium') {
+      setMediumPercentage(percentage);
       onConfigChange({ mediumQuestions: newCount });
     } else if (difficulty === 'hard') {
+      setHardPercentage(percentage);
       onConfigChange({ hardQuestions: newCount });
     }
   };
 
-  const calculatePercentage = (count: number) => {
-    return config.totalQuestions > 0 ? Math.round((count / config.totalQuestions) * 100) : 0;
-  };
-
-  const getTotalPercentage = () => {
-    return calculatePercentage(config.easyQuestions) + 
-           calculatePercentage(config.mediumQuestions) + 
-           calculatePercentage(config.hardQuestions);
-  };
-
   const validatePercentages = () => {
-    const totalPercentage = getTotalPercentage();
-    if (totalPercentage !== 100) {
+    const totalPercentage = easyPercentage + mediumPercentage + hardPercentage;
+    if (totalPercentage === 100) {
+      // If validation passes, collapse the section
+      setIsOpen(false);
+      toast({
+        title: "Configuration Valid",
+        description: "Test configuration is complete and valid.",
+        variant: "default",
+      });
+    } else {
       toast({
         title: "Validation Error",
         description: `Total percentage must equal 100%. Current total: ${totalPercentage}%`,
@@ -121,12 +129,10 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       <span className="text-sm">Percentage</span>
                     </div>
                     <Input
-                      type="number"
-                      value={calculatePercentage(config.easyQuestions)}
+                      type="text"
+                      value={easyPercentage}
                       onChange={(e) => handlePercentageChange('easy', parseInt(e.target.value) || 0)}
                       className="text-center bg-white text-gray-800"
-                      max="100"
-                      min="0"
                     />
                   </div>
                   <div className="space-y-2 mt-3">
@@ -162,12 +168,10 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       <span className="text-sm">Percentage</span>
                     </div>
                     <Input
-                      type="number"
-                      value={calculatePercentage(config.mediumQuestions)}
+                      type="text"
+                      value={mediumPercentage}
                       onChange={(e) => handlePercentageChange('medium', parseInt(e.target.value) || 0)}
                       className="text-center bg-white text-gray-800"
-                      max="100"
-                      min="0"
                     />
                   </div>
                   <div className="space-y-2 mt-3">
@@ -203,12 +207,10 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                       <span className="text-sm">Percentage</span>
                     </div>
                     <Input
-                      type="number"
-                      value={calculatePercentage(config.hardQuestions)}
+                      type="text"
+                      value={hardPercentage}
                       onChange={(e) => handlePercentageChange('hard', parseInt(e.target.value) || 0)}
                       className="text-center bg-white text-gray-800"
-                      max="100"
-                      min="0"
                     />
                   </div>
                   <div className="space-y-2 mt-3">

@@ -30,7 +30,7 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
     const updatedCategories = categories.map(cat => {
       if (cat.id === categoryId) {
         const newSelected = !cat.selected;
-        // If deselecting category, clear all subcategory values
+        // If deselecting category, clear all subcategory values and collapse it
         if (!newSelected) {
           const clearedSubcategories = cat.subcategories.map(sub => ({
             ...sub,
@@ -38,7 +38,7 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
             medium: 0,
             hard: 0,
           }));
-          return { ...cat, selected: newSelected, subcategories: clearedSubcategories };
+          return { ...cat, selected: newSelected, expanded: false, subcategories: clearedSubcategories };
         }
         return { ...cat, selected: newSelected };
       }
@@ -191,9 +191,49 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
                       >
                         {category.expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                         <span className="font-medium">📚 {category.name}</span>
-                        <span className="text-sm text-gray-500">
-                          Total: {totals.total} (E:{totals.easy} M:{totals.medium} H:{totals.hard})
-                        </span>
+                      </div>
+                      
+                      {/* Add Subcategory Button */}
+                      <div className="flex items-center space-x-2">
+                        <Select value={newSubcategory} onValueChange={setNewSubcategory}>
+                          <SelectTrigger className="w-48 h-8">
+                            <SelectValue placeholder="Add subcategory" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Communication Skills">Communication Skills</SelectItem>
+                            <SelectItem value="Critical Thinking">Critical Thinking</SelectItem>
+                            <SelectItem value="Decision Making">Decision Making</SelectItem>
+                            <SelectItem value="Conflict Resolution">Conflict Resolution</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button 
+                          size="sm" 
+                          onClick={() => addSubcategory(category.id)}
+                          disabled={!newSubcategory}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Beautified Total - Right Justified */}
+                    <div className="text-right">
+                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-3 py-2 rounded-lg border border-blue-200 shadow-sm">
+                        <div className="text-lg font-bold text-blue-800 mb-1">
+                          Total: {totals.total}
+                        </div>
+                        <div className="flex space-x-3 text-sm">
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded font-medium">
+                            E: {totals.easy}
+                          </span>
+                          <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded font-medium">
+                            M: {totals.medium}
+                          </span>
+                          <span className="bg-red-100 text-red-800 px-2 py-1 rounded font-medium">
+                            H: {totals.hard}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -222,39 +262,27 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
 
                                 {/* 3D Difficulty Buttons */}
                                 <div className="flex items-center space-x-2">
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    className="bg-gradient-to-b from-green-100 to-green-200 hover:from-green-200 hover:to-green-300 text-green-800 border-green-300 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 h-8 border-2"
-                                    style={{
-                                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)'
-                                    }}
-                                  >
+                                  <div className="bg-gradient-to-b from-green-200 via-green-300 to-green-400 text-green-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-green-500 transform hover:scale-105 transition-all duration-200"
+                                       style={{
+                                         textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                                         boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                                       }}>
                                     Easy
-                                  </Button>
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    className="bg-gradient-to-b from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300 text-orange-800 border-orange-300 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 h-8 border-2"
-                                    style={{
-                                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)'
-                                    }}
-                                  >
+                                  </div>
+                                  <div className="bg-gradient-to-b from-orange-200 via-orange-300 to-orange-400 text-orange-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-orange-500 transform hover:scale-105 transition-all duration-200"
+                                       style={{
+                                         textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                                         boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                                       }}>
                                     Medium
-                                  </Button>
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    className="bg-gradient-to-b from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 text-red-800 border-red-300 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 h-8 border-2"
-                                    style={{
-                                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)'
-                                    }}
-                                  >
+                                  </div>
+                                  <div className="bg-gradient-to-b from-red-200 via-red-300 to-red-400 text-red-900 px-3 py-1 rounded-lg font-semibold text-sm shadow-lg border-2 border-red-500 transform hover:scale-105 transition-all duration-200"
+                                       style={{
+                                         textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                                         boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+                                       }}>
                                     Hard
-                                  </Button>
+                                  </div>
                                 </div>
 
                                 {/* Input Fields */}
@@ -286,30 +314,6 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
                           ))}
                         </>
                       )}
-
-                      {/* Add Subcategory */}
-                      <div className="mt-4 p-3 border-t border-gray-200">
-                        <div className="flex items-center space-x-2">
-                          <Select value={newSubcategory} onValueChange={setNewSubcategory}>
-                            <SelectTrigger className="flex-1">
-                              <SelectValue placeholder="Select subcategory to add" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Communication Skills">Communication Skills</SelectItem>
-                              <SelectItem value="Critical Thinking">Critical Thinking</SelectItem>
-                              <SelectItem value="Decision Making">Decision Making</SelectItem>
-                              <SelectItem value="Conflict Resolution">Conflict Resolution</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button 
-                            size="sm" 
-                            onClick={() => addSubcategory(category.id)}
-                            disabled={!newSubcategory}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
