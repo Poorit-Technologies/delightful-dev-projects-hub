@@ -41,20 +41,23 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Total Questions */}
-        <div className="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <Label htmlFor="totalQuestions" className="text-sm font-medium">Total Questions</Label>
-          <Input
-            id="totalQuestions"
-            type="number"
-            value={config.totalQuestions}
-            onChange={(e) => handleInputChange('totalQuestions', parseInt(e.target.value) || 0)}
-            className="text-center font-semibold text-lg h-16"
-          />
+        <div className="space-y-2 bg-blue-50 p-4 rounded-lg border border-gray-200">
+          <Label htmlFor="totalQuestions" className="text-sm font-medium text-center block">Total Questions</Label>
+          <div className="text-center">
+            <div className="text-4xl font-bold text-gray-800 mb-3">100</div>
+            <Input
+              id="totalQuestions"
+              type="number"
+              value={config.totalQuestions}
+              onChange={(e) => handleInputChange('totalQuestions', parseInt(e.target.value) || 0)}
+              className="text-center font-semibold text-lg"
+            />
+          </div>
         </div>
 
         {/* Easy Questions */}
-        <div className="space-y-2 bg-green-200 p-4 rounded-lg text-gray-800">
-          <Label className="text-sm font-medium text-gray-800">Easy Questions</Label>
+        <div className="space-y-2 bg-green-100 p-4 rounded-lg text-gray-800">
+          <Label className="text-sm font-medium text-gray-800 text-center block">Easy Questions</Label>
           <div className="text-center">
             <div className="text-4xl font-bold text-gray-800 mb-3">{config.easyQuestions}</div>
             <div className="space-y-2">
@@ -92,8 +95,8 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
         </div>
 
         {/* Medium Questions */}
-        <div className="space-y-2 bg-orange-200 p-4 rounded-lg text-gray-800">
-          <Label className="text-sm font-medium text-gray-800">Medium Questions</Label>
+        <div className="space-y-2 bg-orange-100 p-4 rounded-lg text-gray-800">
+          <Label className="text-sm font-medium text-gray-800 text-center block">Medium Questions</Label>
           <div className="text-center">
             <div className="text-4xl font-bold text-gray-800 mb-3">{config.mediumQuestions}</div>
             <div className="space-y-2">
@@ -131,8 +134,8 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
         </div>
 
         {/* Hard Questions */}
-        <div className="space-y-2 bg-red-200 p-4 rounded-lg text-gray-800">
-          <Label className="text-sm font-medium text-gray-800">Hard Questions</Label>
+        <div className="space-y-2 bg-red-100 p-4 rounded-lg text-gray-800">
+          <Label className="text-sm font-medium text-gray-800 text-center block">Hard Questions</Label>
           <div className="text-center">
             <div className="text-4xl font-bold text-gray-800 mb-3">{config.hardQuestions}</div>
             <div className="space-y-2">

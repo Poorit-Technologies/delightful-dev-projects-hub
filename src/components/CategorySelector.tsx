@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { Category, Subcategory } from './TestConfigurationApp';
 
 interface CategorySelectorProps {
@@ -29,6 +30,17 @@ const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorPr
         const updatedSubcategories = cat.subcategories.map(sub =>
           sub.id === subcategoryId ? { ...sub, [field]: value } : sub
         );
+        return { ...cat, subcategories: updatedSubcategories };
+      }
+      return cat;
+    });
+    onCategoriesChange(updatedCategories);
+  };
+
+  const deleteSubcategory = (categoryId: string, subcategoryId: string) => {
+    const updatedCategories = categories.map(cat => {
+      if (cat.id === categoryId) {
+        const updatedSubcategories = cat.subcategories.filter(sub => sub.id !== subcategoryId);
         return { ...cat, subcategories: updatedSubcategories };
       }
       return cat;
@@ -83,44 +95,47 @@ const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorPr
                 {category.subcategories.length > 0 && (
                   <>
                     {/* Headers */}
-                    <div className="grid grid-cols-6 gap-4 mb-3 text-sm font-medium text-gray-600">
+                    <div className="grid grid-cols-5 gap-4 mb-3 text-sm font-medium text-gray-600">
                       <div>Subcategory</div>
-                      <div className="text-center">Default</div>
-                      <div className="text-center text-green-600">E-1</div>
-                      <div className="text-center text-orange-600">M-1</div>
-                      <div className="text-center text-red-600">H-1</div>
-                      <div></div>
+                      <div className="text-center">Easy</div>
+                      <div className="text-center">Medium</div>
+                      <div className="text-center">Hard</div>
+                      <div className="text-center">Action</div>
                     </div>
 
                     {/* Subcategory Rows */}
                     {category.subcategories.map((subcategory) => (
-                      <div key={subcategory.id} className="grid grid-cols-6 gap-4 mb-3 items-center">
+                      <div key={subcategory.id} className="grid grid-cols-5 gap-4 mb-3 items-center">
                         <div className="text-sm">{subcategory.name}</div>
-                        <Input
-                          type="number"
-                          value={subcategory.default}
-                          onChange={(e) => updateSubcategory(category.id, subcategory.id, 'default', parseInt(e.target.value) || 0)}
-                          className="text-center text-sm"
-                        />
-                        <Input
-                          type="number"
-                          value={subcategory.easy}
-                          onChange={(e) => updateSubcategory(category.id, subcategory.id, 'easy', parseInt(e.target.value) || 0)}
-                          className="text-center text-sm"
-                        />
-                        <Input
-                          type="number"
-                          value={subcategory.medium}
-                          onChange={(e) => updateSubcategory(category.id, subcategory.id, 'medium', parseInt(e.target.value) || 0)}
-                          className="text-center text-sm"
-                        />
-                        <Input
-                          type="number"
-                          value={subcategory.hard}
-                          onChange={(e) => updateSubcategory(category.id, subcategory.id, 'hard', parseInt(e.target.value) || 0)}
-                          className="text-center text-sm"
-                        />
-                        <div></div>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                        >
+                          Easy
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200"
+                        >
+                          Medium
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+                        >
+                          Hard
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => deleteSubcategory(category.id, subcategory.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
                     ))}
                   </>
