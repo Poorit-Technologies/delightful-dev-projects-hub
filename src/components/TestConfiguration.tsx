@@ -36,16 +36,16 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
         </div>
 
         {/* Easy Questions */}
-        <div className="space-y-2 bg-green-50 p-4 rounded-lg border border-green-200">
-          <Label className="text-sm font-medium text-green-600">Easy Questions (40%)</Label>
+        <div className="space-y-2 bg-emerald-500 p-4 rounded-lg text-white">
+          <Label className="text-sm font-medium text-white">Easy Questions (40%)</Label>
           <div className="text-center">
-            <div className="text-4xl font-bold text-green-600 mb-3">{config.easyQuestions}</div>
+            <div className="text-4xl font-bold text-white mb-3">{config.easyQuestions}</div>
             <Input
               type="number"
               placeholder="Time (seconds)"
               value={config.easyTime}
               onChange={(e) => handleInputChange('easyTime', parseInt(e.target.value) || 0)}
-              className="mb-3 text-center"
+              className="mb-3 text-center bg-white text-gray-800"
             />
             <div className="space-y-2">
               <div className="flex items-center justify-center space-x-2">
@@ -56,23 +56,23 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 type="number"
                 value={config.easyMarks}
                 onChange={(e) => handleInputChange('easyMarks', parseInt(e.target.value) || 0)}
-                className="text-center"
+                className="text-center bg-white text-gray-800"
               />
             </div>
           </div>
         </div>
 
         {/* Medium Questions */}
-        <div className="space-y-2 bg-orange-50 p-4 rounded-lg border border-orange-200">
-          <Label className="text-sm font-medium text-orange-600">Medium Questions (40%)</Label>
+        <div className="space-y-2 bg-orange-500 p-4 rounded-lg text-white">
+          <Label className="text-sm font-medium text-white">Medium Questions (40%)</Label>
           <div className="text-center">
-            <div className="text-4xl font-bold text-orange-600 mb-3">{config.mediumQuestions}</div>
+            <div className="text-4xl font-bold text-white mb-3">{config.mediumQuestions}</div>
             <Input
               type="number"
               placeholder="Time (seconds)"
               value={config.mediumTime}
               onChange={(e) => handleInputChange('mediumTime', parseInt(e.target.value) || 0)}
-              className="mb-3 text-center"
+              className="mb-3 text-center bg-white text-gray-800"
             />
             <div className="space-y-2">
               <div className="flex items-center justify-center space-x-2">
@@ -83,23 +83,23 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 type="number"
                 value={config.mediumMarks}
                 onChange={(e) => handleInputChange('mediumMarks', parseInt(e.target.value) || 0)}
-                className="text-center"
+                className="text-center bg-white text-gray-800"
               />
             </div>
           </div>
         </div>
 
         {/* Hard Questions */}
-        <div className="space-y-2 bg-red-50 p-4 rounded-lg border border-red-200">
-          <Label className="text-sm font-medium text-red-600">Hard Questions (20%)</Label>
+        <div className="space-y-2 bg-red-500 p-4 rounded-lg text-white">
+          <Label className="text-sm font-medium text-white">Hard Questions (20%)</Label>
           <div className="text-center">
-            <div className="text-4xl font-bold text-red-600 mb-3">{config.hardQuestions}</div>
+            <div className="text-4xl font-bold text-white mb-3">{config.hardQuestions}</div>
             <Input
               type="number"
               placeholder="Time (seconds)"
               value={config.hardTime}
               onChange={(e) => handleInputChange('hardTime', parseInt(e.target.value) || 0)}
-              className="mb-3 text-center"
+              className="mb-3 text-center bg-white text-gray-800"
             />
             <div className="space-y-2">
               <div className="flex items-center justify-center space-x-2">
@@ -110,7 +110,7 @@ const TestConfiguration = ({ config, onConfigChange }: TestConfigurationProps) =
                 type="number"
                 value={config.hardMarks}
                 onChange={(e) => handleInputChange('hardMarks', parseInt(e.target.value) || 0)}
-                className="text-center"
+                className="text-center bg-white text-gray-800"
               />
             </div>
           </div>
