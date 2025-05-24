@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -28,33 +27,6 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
       cat.id === categoryId ? { ...cat, expanded: !cat.expanded } : cat
     );
     onCategoriesChange(updatedCategories);
-  };
-
-  const toggleCategorySelection = (categoryId: string) => {
-    const updatedCategories = categories.map(cat => {
-      if (cat.id === categoryId) {
-        const newSelected = !cat.selected;
-        // If deselecting category, clear all subcategory values and collapse it
-        if (!newSelected) {
-          const clearedSubcategories = cat.subcategories.map(sub => ({
-            ...sub,
-            easy: 0,
-            medium: 0,
-            hard: 0,
-          }));
-          return { ...cat, selected: newSelected, expanded: false, subcategories: clearedSubcategories };
-        }
-        return { ...cat, selected: newSelected };
-      }
-      return cat;
-    });
-    
-    // Apply smart distribution if enabled
-    if (config.smartDistribution) {
-      applySmartDistribution(updatedCategories);
-    } else {
-      onCategoriesChange(updatedCategories);
-    }
   };
 
   const applySmartDistribution = (updatedCategories: Category[]) => {
@@ -104,6 +76,33 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
     });
 
     onCategoriesChange(categoriesWithDistribution);
+  };
+
+  const toggleCategorySelection = (categoryId: string) => {
+    const updatedCategories = categories.map(cat => {
+      if (cat.id === categoryId) {
+        const newSelected = !cat.selected;
+        // If deselecting category, clear all subcategory values and collapse it
+        if (!newSelected) {
+          const clearedSubcategories = cat.subcategories.map(sub => ({
+            ...sub,
+            easy: 0,
+            medium: 0,
+            hard: 0,
+          }));
+          return { ...cat, selected: newSelected, expanded: false, subcategories: clearedSubcategories };
+        }
+        return { ...cat, selected: newSelected };
+      }
+      return cat;
+    });
+    
+    // Apply smart distribution if enabled
+    if (config.smartDistribution) {
+      applySmartDistribution(updatedCategories);
+    } else {
+      onCategoriesChange(updatedCategories);
+    }
   };
 
   const updateSubcategory = (categoryId: string, subcategoryId: string, field: keyof Subcategory, value: number) => {
