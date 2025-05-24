@@ -244,18 +244,13 @@ const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySe
             <div className="space-y-4">
               {categories.map((category) => (
                 <div key={category.id} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white/50 backdrop-blur-sm">
-                  {/* Category Header with Totals */}
-                  <div className="flex items-center justify-between">
-                    <CategoryHeader
-                      category={category}
-                      onToggleCategory={toggleCategory}
-                      onToggleCategorySelection={toggleCategorySelection}
-                      onAddSubcategory={addSubcategory}
-                    />
-                    <div className="pr-4">
-                      <CategoryTotals category={category} />
-                    </div>
-                  </div>
+                  {/* Category Header */}
+                  <CategoryHeader
+                    category={category}
+                    onToggleCategory={toggleCategory}
+                    onToggleCategorySelection={toggleCategorySelection}
+                    onAddSubcategory={addSubcategory}
+                  />
 
                   {/* Subcategories */}
                   <SubcategoryList
