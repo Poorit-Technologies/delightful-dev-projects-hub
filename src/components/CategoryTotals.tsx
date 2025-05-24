@@ -34,21 +34,33 @@ const CategoryTotals = ({ category }: CategoryTotalsProps) => {
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-green-100 border-green-200 text-green-800 font-medium hover:bg-green-200"
+        className="bg-gradient-to-b from-green-200 via-green-300 to-green-400 text-green-900 border-2 border-green-500 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        style={{
+          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+        }}
       >
         Easy: {totals.easy}
       </Button>
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-orange-100 border-orange-200 text-orange-800 font-medium hover:bg-orange-200"
+        className="bg-gradient-to-b from-orange-200 via-orange-300 to-orange-400 text-orange-900 border-2 border-orange-500 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        style={{
+          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+        }}
       >
         Medium: {totals.medium}
       </Button>
       <Button 
         variant="outline" 
         size="sm" 
-        className="bg-red-100 border-red-200 text-red-800 font-medium hover:bg-red-200"
+        className="bg-gradient-to-b from-red-200 via-red-300 to-red-400 text-red-900 border-2 border-red-500 font-semibold shadow-lg hover:scale-105 transition-all duration-200"
+        style={{
+          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.1)'
+        }}
       >
         Hard: {totals.hard}
       </Button>

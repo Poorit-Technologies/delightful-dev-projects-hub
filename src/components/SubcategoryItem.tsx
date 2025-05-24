@@ -64,21 +64,30 @@ const SubcategoryItem = ({
             type="number"
             value={subcategory.easy}
             onChange={(e) => onUpdateSubcategory(categoryId, subcategory.id, 'easy', parseInt(e.target.value) || 0)}
-            className="w-16 h-8 text-center bg-green-50 border-green-200"
+            className="w-16 h-8 text-center bg-gradient-to-b from-green-200 via-green-300 to-green-400 text-green-900 border-2 border-green-500 font-semibold"
+            style={{
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+            }}
             min="0"
           />
           <Input
             type="number"
             value={subcategory.medium}
             onChange={(e) => onUpdateSubcategory(categoryId, subcategory.id, 'medium', parseInt(e.target.value) || 0)}
-            className="w-16 h-8 text-center bg-orange-50 border-orange-200"
+            className="w-16 h-8 text-center bg-gradient-to-b from-orange-200 via-orange-300 to-orange-400 text-orange-900 border-2 border-orange-500 font-semibold"
+            style={{
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+            }}
             min="0"
           />
           <Input
             type="number"
             value={subcategory.hard}
             onChange={(e) => onUpdateSubcategory(categoryId, subcategory.id, 'hard', parseInt(e.target.value) || 0)}
-            className="w-16 h-8 text-center bg-red-50 border-red-200"
+            className="w-16 h-8 text-center bg-gradient-to-b from-red-200 via-red-300 to-red-400 text-red-900 border-2 border-red-500 font-semibold"
+            style={{
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+            }}
             min="0"
           />
         </div>
