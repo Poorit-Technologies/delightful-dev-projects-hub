@@ -1,56 +1,48 @@
 
 import { Button } from '@/components/ui/button';
-import { Save, Settings } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const ActionButtons = () => {
   const { toast } = useToast();
 
-  const handleSaveConfiguration = () => {
+  const handlePrevious = () => {
     toast({
-      title: "Configuration Saved",
-      description: "Your test configuration has been saved successfully.",
+      title: "Previous Step",
+      description: "Going back to the previous step...",
     });
   };
 
-  const handlePreviewTest = () => {
+  const handleNext = () => {
     toast({
-      title: "Preview Test",
-      description: "Opening test preview...",
-    });
-  };
-
-  const handleAdvancedSettings = () => {
-    toast({
-      title: "Advanced Settings",
-      description: "Opening advanced configuration options...",
+      title: "Next Step", 
+      description: "Proceeding to the next step...",
     });
   };
 
   return (
-    <div className="flex justify-center space-x-4">
+    <div className="flex justify-center space-x-6">
       <Button 
-        onClick={handleSaveConfiguration}
-        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2"
-      >
-        <Save className="h-4 w-4 mr-2" />
-        Save Configuration
-      </Button>
-      
-      <Button 
-        onClick={handlePreviewTest}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
-      >
-        👁️ Preview Test
-      </Button>
-      
-      <Button 
-        onClick={handleAdvancedSettings}
+        onClick={handlePrevious}
         variant="outline"
-        className="px-6 py-2"
+        className="group relative px-8 py-3 bg-gradient-to-r from-slate-50 to-slate-100 hover:from-slate-100 hover:to-slate-200 border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-800 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
       >
-        <Settings className="h-4 w-4 mr-2" />
-        Advanced Settings
+        <div className="flex items-center space-x-2">
+          <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+          <span>Previous</span>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </Button>
+      
+      <Button 
+        onClick={handleNext}
+        className="group relative px-8 py-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
+      >
+        <div className="flex items-center space-x-2">
+          <span>Next</span>
+          <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </Button>
     </div>
   );
