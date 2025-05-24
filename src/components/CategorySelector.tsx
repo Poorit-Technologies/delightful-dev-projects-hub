@@ -7,14 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
-import { Category, Subcategory } from './TestConfigurationApp';
+import { Category, Subcategory, TestConfig } from './TestConfigurationApp';
 
 interface CategorySelectorProps {
   categories: Category[];
   onCategoriesChange: (categories: Category[]) => void;
+  config: TestConfig;
 }
 
-const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorProps) => {
+const CategorySelector = ({ categories, onCategoriesChange, config }: CategorySelectorProps) => {
   const [newSubcategory, setNewSubcategory] = useState('');
 
   const toggleCategory = (categoryId: string) => {
@@ -22,6 +23,49 @@ const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorPr
       cat.id === categoryId ? { ...cat, expanded: !cat.expanded } : cat
     );
     onCategoriesChange(updatedCategories);
+  };
+
+  const toggleCategorySelection = (categoryId: string) => {
+    const updatedCategories = categories.map(cat =>
+      cat.id === categoryId ? { ...cat, selected: !cat.selected } : cat
+    );
+    onCategoriesChange(updatedCategories);
+    
+    // Apply smart distribution if enabled
+    if (config.smartDistribution) {
+      applySmartDistribution(updatedCategories);
+    }
+  };
+
+  const applySmartDistribution = (updatedCategories: Category[]) => {
+    const selectedCategories = updatedCategories.filter(cat => cat.selected);
+    if (selectedCategories.length === 0) return;
+
+    const totalEasy = config.easyQuestions;
+    const totalMedium = config.mediumQuestions;
+    const totalHard = config.hardQuestions;
+
+    const categoriesWithDistribution = updatedCategories.map(cat => {
+      if (!cat.selected) return cat;
+
+      const totalSubcategories = cat.subcategories.length;
+      if (totalSubcategories === 0) return cat;
+
+      const easyPerSubcat = Math.floor(totalEasy / selectedCategories.length / totalSubcategories);
+      const mediumPerSubcat = Math.floor(totalMedium / selectedCategories.length / totalSubcategories);
+      const hardPerSubcat = Math.floor(totalHard / selectedCategories.length / totalSubcategories);
+
+      const updatedSubcategories = cat.subcategories.map(sub => ({
+        ...sub,
+        easy: easyPerSubcat,
+        medium: mediumPerSubcat,
+        hard: hardPerSubcat,
+      }));
+
+      return { ...cat, subcategories: updatedSubcategories };
+    });
+
+    onCategoriesChange(categoriesWithDistribution);
   };
 
   const updateSubcategory = (categoryId: string, subcategoryId: string, field: keyof Subcategory, value: number) => {
@@ -56,9 +100,8 @@ const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorPr
         const newSub: Subcategory = {
           id: `${categoryId}-${Date.now()}`,
           name: newSubcategory,
-          default: 2,
-          easy: 2,
-          medium: 2,
+          easy: 0,
+          medium: 0,
           hard: 0,
         };
         return {
@@ -80,12 +123,21 @@ const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorPr
         {categories.map((category) => (
           <div key={category.id} className="border border-gray-200 rounded-lg">
             {/* Category Header */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 cursor-pointer" onClick={() => toggleCategory(category.id)}>
+            <div className="flex items-center justify-between p-4 bg-gray-50">
               <div className="flex items-center space-x-3">
-                <Checkbox id={`cat-${category.id}`} defaultChecked />
-                {category.expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                <span className="font-medium">📚 {category.name}</span>
-                <span className="text-sm text-gray-500">Total: {category.totalQuestions}</span>
+                <Checkbox 
+                  id={`cat-${category.id}`} 
+                  checked={category.selected || false}
+                  onCheckedChange={() => toggleCategorySelection(category.id)}
+                />
+                <div 
+                  className="flex items-center space-x-2 cursor-pointer" 
+                  onClick={() => toggleCategory(category.id)}
+                >
+                  {category.expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  <span className="font-medium">📚 {category.name}</span>
+                  <span className="text-sm text-gray-500">Total: {category.totalQuestions}</span>
+                </div>
               </div>
             </div>
 
@@ -94,48 +146,69 @@ const CategorySelector = ({ categories, onCategoriesChange }: CategorySelectorPr
               <div className="p-4">
                 {category.subcategories.length > 0 && (
                   <>
-                    {/* Headers */}
-                    <div className="grid grid-cols-5 gap-4 mb-3 text-sm font-medium text-gray-600">
-                      <div>Subcategory</div>
-                      <div className="text-center">Easy</div>
-                      <div className="text-center">Medium</div>
-                      <div className="text-center">Hard</div>
-                      <div className="text-center">Action</div>
-                    </div>
-
                     {/* Subcategory Rows */}
                     {category.subcategories.map((subcategory) => (
-                      <div key={subcategory.id} className="grid grid-cols-5 gap-4 mb-3 items-center">
-                        <div className="text-sm">{subcategory.name}</div>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
-                        >
-                          Easy
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200"
-                        >
-                          Medium
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-                        >
-                          Hard
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => deleteSubcategory(category.id, subcategory.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                      <div key={subcategory.id} className="mb-4 p-3 border border-gray-100 rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <span className="text-sm font-medium">{subcategory.name}</span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => deleteSubcategory(category.id, subcategory.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-4">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                          >
+                            Easy
+                          </Button>
+                          <Input
+                            type="number"
+                            value={subcategory.easy}
+                            onChange={(e) => updateSubcategory(category.id, subcategory.id, 'easy', parseInt(e.target.value) || 0)}
+                            className="w-20 text-center"
+                            min="0"
+                          />
+                          
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200"
+                          >
+                            Medium
+                          </Button>
+                          <Input
+                            type="number"
+                            value={subcategory.medium}
+                            onChange={(e) => updateSubcategory(category.id, subcategory.id, 'medium', parseInt(e.target.value) || 0)}
+                            className="w-20 text-center"
+                            min="0"
+                          />
+                          
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+                          >
+                            Hard
+                          </Button>
+                          <Input
+                            type="number"
+                            value={subcategory.hard}
+                            onChange={(e) => updateSubcategory(category.id, subcategory.id, 'hard', parseInt(e.target.value) || 0)}
+                            className="w-20 text-center"
+                            min="0"
+                          />
+                        </div>
                       </div>
                     ))}
                   </>

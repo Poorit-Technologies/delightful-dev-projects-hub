@@ -23,7 +23,6 @@ export interface TestConfig {
 export interface Subcategory {
   id: string;
   name: string;
-  default: number;
   easy: number;
   medium: number;
   hard: number;
@@ -34,15 +33,16 @@ export interface Category {
   name: string;
   totalQuestions: number;
   expanded: boolean;
+  selected?: boolean;
   subcategories: Subcategory[];
 }
 
 const TestConfigurationApp = () => {
   const [testConfig, setTestConfig] = useState<TestConfig>({
-    totalQuestions: 52,
-    easyQuestions: 21,
-    mediumQuestions: 21,
-    hardQuestions: 10,
+    totalQuestions: 100,
+    easyQuestions: 40,
+    mediumQuestions: 40,
+    hardQuestions: 20,
     easyTime: 40,
     mediumTime: 60,
     hardTime: 90,
@@ -57,12 +57,13 @@ const TestConfigurationApp = () => {
       id: '1',
       name: 'Soft Skills',
       totalQuestions: 15,
-      expanded: true,
+      expanded: false,
+      selected: false,
       subcategories: [
-        { id: '1-1', name: 'Communication Skills', default: 2, easy: 2, medium: 2, hard: 0 },
-        { id: '1-2', name: 'Leadership', default: 2, easy: 2, medium: 2, hard: 0 },
-        { id: '1-3', name: 'Time Management', default: 2, easy: 2, medium: 2, hard: 0 },
-        { id: '1-4', name: 'Emotional Intelligence', default: 2, easy: 2, medium: 2, hard: 0 },
+        { id: '1-1', name: 'Communication Skills', easy: 0, medium: 0, hard: 0 },
+        { id: '1-2', name: 'Leadership', easy: 0, medium: 0, hard: 0 },
+        { id: '1-3', name: 'Time Management', easy: 0, medium: 0, hard: 0 },
+        { id: '1-4', name: 'Emotional Intelligence', easy: 0, medium: 0, hard: 0 },
       ],
     },
     {
@@ -70,6 +71,7 @@ const TestConfigurationApp = () => {
       name: 'Adaptability',
       totalQuestions: 4,
       expanded: false,
+      selected: false,
       subcategories: [],
     },
     {
@@ -77,6 +79,7 @@ const TestConfigurationApp = () => {
       name: 'Teamwork',
       totalQuestions: 5,
       expanded: false,
+      selected: false,
       subcategories: [],
     },
     {
@@ -84,6 +87,7 @@ const TestConfigurationApp = () => {
       name: 'Problem Solving',
       totalQuestions: 3,
       expanded: false,
+      selected: false,
       subcategories: [],
     },
     {
@@ -91,6 +95,7 @@ const TestConfigurationApp = () => {
       name: 'Leadership',
       totalQuestions: 4,
       expanded: false,
+      selected: false,
       subcategories: [],
     },
   ]);
@@ -115,7 +120,8 @@ const TestConfigurationApp = () => {
         
         <CategorySelector 
           categories={categories} 
-          onCategoriesChange={updateCategories} 
+          onCategoriesChange={updateCategories}
+          config={testConfig}
         />
         
         <ActionButtons />
