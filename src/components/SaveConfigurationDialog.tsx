@@ -63,7 +63,7 @@ const SaveConfigurationDialog = ({
       setDescription('');
       setHasLoadedData(false);
     }
-  }, [editMode, configurationId, open, hasLoadedData, fetchTestDefinitionById]);
+  }, [editMode, configurationId, open, hasLoadedData]);
 
   // Reset hasLoadedData when dialog closes
   useEffect(() => {

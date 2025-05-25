@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -23,7 +23,7 @@ export const useTestDefinitions = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const fetchTestDefinitions = async () => {
+  const fetchTestDefinitions = useCallback(async () => {
     if (!user) return;
     
     setLoading(true);
@@ -54,9 +54,9 @@ export const useTestDefinitions = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, toast]);
 
-  const fetchTestDefinitionById = async (id: string): Promise<TestDefinition | null> => {
+  const fetchTestDefinitionById = useCallback(async (id: string): Promise<TestDefinition | null> => {
     if (!user) return null;
 
     try {
@@ -83,9 +83,9 @@ export const useTestDefinitions = () => {
       });
       return null;
     }
-  };
+  }, [user, toast]);
 
-  const saveTestDefinition = async (
+  const saveTestDefinition = useCallback(async (
     name: string,
     description: string,
     testConfig: TestConfig,
@@ -129,9 +129,9 @@ export const useTestDefinitions = () => {
       });
       return null;
     }
-  };
+  }, [user, toast, fetchTestDefinitions]);
 
-  const updateTestDefinition = async (
+  const updateTestDefinition = useCallback(async (
     id: string,
     name: string,
     description: string,
@@ -171,9 +171,9 @@ export const useTestDefinitions = () => {
       });
       return false;
     }
-  };
+  }, [user, toast, fetchTestDefinitions]);
 
-  const deleteTestDefinition = async (id: string): Promise<boolean> => {
+  const deleteTestDefinition = useCallback(async (id: string): Promise<boolean> => {
     if (!user) return false;
 
     try {
@@ -201,13 +201,13 @@ export const useTestDefinitions = () => {
       });
       return false;
     }
-  };
+  }, [user, toast, fetchTestDefinitions]);
 
   useEffect(() => {
     if (user) {
       fetchTestDefinitions();
     }
-  }, [user]);
+  }, [user, fetchTestDefinitions]);
 
   return {
     testDefinitions,
