@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTestDefinitions, TestDefinition } from '@/hooks/useTestDefinitions';
-import { Edit, Trash2, Copy, Calendar, Clock, FileText } from 'lucide-react';
+import { Edit, Trash2, Copy, Calendar, Clock, FileText, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
@@ -15,7 +15,7 @@ interface ConfigurationCardProps {
 
 const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const { deleteTestDefinition } = useTestDefinitions();
+  const { deleteTestDefinition, userProfile } = useTestDefinitions();
   const { toast } = useToast();
 
   const formatDate = (dateString: string) => {
@@ -45,6 +45,9 @@ const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
   const selectedCategories = configuration.categories.filter(cat => cat.selected).length;
   const totalQuestions = configuration.test_config.totalQuestions;
 
+  // Check if user can edit/delete this configuration
+  const canModifyConfiguration = userProfile?.role === 'admin' || userProfile?.role === 'super_admin';
+
   return (
     <>
       <Card className="bg-white/80 backdrop-blur-sm border border-white/40 shadow-lg hover:shadow-xl transition-all duration-300 group">
@@ -60,6 +63,9 @@ const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
                 </p>
               )}
             </div>
+            {!canModifyConfiguration && (
+              <Shield className="h-4 w-4 text-amber-500" title="Read-only access" />
+            )}
           </div>
         </CardHeader>
 
@@ -113,28 +119,41 @@ const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
 
           {/* Actions */}
           <div className="flex space-x-2 pt-2">
-            <Link to={`/test/edit/${configuration.id}`} className="flex-1">
-              <Button variant="default" size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
-                <Edit className="h-3 w-3 mr-1" />
-                Edit
-              </Button>
-            </Link>
-            <Button variant="outline" size="sm" onClick={handleDuplicate}>
-              <Copy className="h-3 w-3" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowDeleteDialog(true)} className="text-red-600 hover:text-red-700 hover:bg-red-50">
-              <Trash2 className="h-3 w-3" />
-            </Button>
+            {canModifyConfiguration ? (
+              <>
+                <Link to={`/test/edit/${configuration.id}`} className="flex-1">
+                  <Button variant="default" size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Edit className="h-3 w-3 mr-1" />
+                    Edit
+                  </Button>
+                </Link>
+                <Button variant="outline" size="sm" onClick={handleDuplicate}>
+                  <Copy className="h-3 w-3" />
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setShowDeleteDialog(true)} className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </>
+            ) : (
+              <div className="flex-1">
+                <Button variant="outline" size="sm" className="w-full" disabled>
+                  <Shield className="h-3 w-3 mr-1" />
+                  View Only
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      <DeleteConfirmationDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        onConfirm={handleDelete}
-        configurationName={configuration.name}
-      />
+      {canModifyConfiguration && (
+        <DeleteConfirmationDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          onConfirm={handleDelete}
+          configurationName={configuration.name}
+        />
+      )}
     </>
   );
 };

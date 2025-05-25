@@ -13,15 +13,44 @@ export interface TestDefinition {
   test_config: TestConfig;
   categories: Category[];
   is_public: boolean;
+  organization_id?: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface UserProfile {
+  id: string;
+  organization_id?: string;
+  role: 'super_admin' | 'admin' | 'student';
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  is_active: boolean;
 }
 
 export const useTestDefinitions = () => {
   const [testDefinitions, setTestDefinitions] = useState<TestDefinition[]>([]);
   const [loading, setLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
+
+  const fetchUserProfile = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      setUserProfile(data);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  }, [user]);
 
   const fetchTestDefinitions = useCallback(async () => {
     if (!user) return;
@@ -31,7 +60,6 @@ export const useTestDefinitions = () => {
       const { data, error } = await supabase
         .from('test_definitions')
         .select('*')
-        .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
@@ -64,7 +92,6 @@ export const useTestDefinitions = () => {
         .from('test_definitions')
         .select('*')
         .eq('id', id)
-        .eq('user_id', user.id)
         .single();
 
       if (error) throw error;
@@ -91,7 +118,7 @@ export const useTestDefinitions = () => {
     testConfig: TestConfig,
     categories: Category[]
   ): Promise<TestDefinition | null> => {
-    if (!user) return null;
+    if (!user || !userProfile) return null;
 
     try {
       const { data, error } = await supabase
@@ -102,6 +129,7 @@ export const useTestDefinitions = () => {
           description,
           test_config: testConfig as any,
           categories: categories as any,
+          organization_id: userProfile.organization_id,
         })
         .select()
         .single();
@@ -129,7 +157,7 @@ export const useTestDefinitions = () => {
       });
       return null;
     }
-  }, [user, toast, fetchTestDefinitions]);
+  }, [user, userProfile, toast, fetchTestDefinitions]);
 
   const updateTestDefinition = useCallback(async (
     id: string,
@@ -150,8 +178,7 @@ export const useTestDefinitions = () => {
           categories: categories as any,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', id)
-        .eq('user_id', user.id);
+        .eq('id', id);
 
       if (error) throw error;
 
@@ -180,8 +207,7 @@ export const useTestDefinitions = () => {
       const { error } = await supabase
         .from('test_definitions')
         .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
+        .eq('id', id);
 
       if (error) throw error;
 
@@ -205,13 +231,15 @@ export const useTestDefinitions = () => {
 
   useEffect(() => {
     if (user) {
+      fetchUserProfile();
       fetchTestDefinitions();
     }
-  }, [user, fetchTestDefinitions]);
+  }, [user, fetchUserProfile, fetchTestDefinitions]);
 
   return {
     testDefinitions,
     loading,
+    userProfile,
     saveTestDefinition,
     updateTestDefinition,
     deleteTestDefinition,

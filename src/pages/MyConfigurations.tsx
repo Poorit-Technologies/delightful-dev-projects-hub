@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTestDefinitions } from '@/hooks/useTestDefinitions';
-import { Search, Plus, FileText } from 'lucide-react';
+import { Search, Plus, FileText, Shield } from 'lucide-react';
 import ConfigurationCard from '@/components/ConfigurationCard';
+import UserProfile from '@/components/UserProfile';
 
 const MyConfigurations = () => {
   const { user, loading: authLoading } = useAuth();
-  const { testDefinitions, loading } = useTestDefinitions();
+  const { testDefinitions, loading, userProfile } = useTestDefinitions();
   const [searchTerm, setSearchTerm] = useState('');
 
   if (authLoading) {
@@ -31,6 +32,8 @@ const MyConfigurations = () => {
     (config.description && config.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  const canCreateConfigurations = userProfile?.role === 'admin' || userProfile?.role === 'super_admin';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Decorative background elements */}
@@ -47,24 +50,41 @@ const MyConfigurations = () => {
             <h1 className="text-4xl font-bold text-gray-900 mb-2">My Configurations</h1>
             <p className="text-lg text-gray-600">Manage your saved test configurations</p>
           </div>
-          <Link to="/test">
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="h-4 w-4 mr-2" />
-              Create New
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            {!canCreateConfigurations && (
+              <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg">
+                <Shield className="h-4 w-4" />
+                Admin access required to create configurations
+              </div>
+            )}
+            {canCreateConfigurations && (
+              <Link to="/test">
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create New
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
 
-        {/* Search */}
-        <div className="mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Search configurations..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/80 backdrop-blur-sm"
-            />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+          {/* User Profile Card */}
+          <div className="lg:col-span-1">
+            <UserProfile />
+          </div>
+          
+          {/* Search */}
+          <div className="lg:col-span-3">
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search configurations..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-white/80 backdrop-blur-sm"
+              />
+            </div>
           </div>
         </div>
 
@@ -83,10 +103,12 @@ const MyConfigurations = () => {
               <p className="text-gray-600 mb-6">
                 {searchTerm 
                   ? 'Try adjusting your search terms'
-                  : 'Create your first test configuration to get started'
+                  : canCreateConfigurations 
+                    ? 'Create your first test configuration to get started'
+                    : 'Contact your administrator to create test configurations'
                 }
               </p>
-              {!searchTerm && (
+              {!searchTerm && canCreateConfigurations && (
                 <Link to="/test">
                   <Button className="bg-blue-600 hover:bg-blue-700">
                     <Plus className="h-4 w-4 mr-2" />

@@ -36,7 +36,10 @@ const SaveConfigurationDialog = ({
   const [description, setDescription] = useState('');
   const [saving, setSaving] = useState(false);
   const [hasLoadedData, setHasLoadedData] = useState(false);
-  const { saveTestDefinition, updateTestDefinition, fetchTestDefinitionById } = useTestDefinitions();
+  const { saveTestDefinition, updateTestDefinition, fetchTestDefinitionById, userProfile } = useTestDefinitions();
+
+  // Check if user can save/edit configurations (admin or super_admin)
+  const canSaveConfiguration = userProfile?.role === 'admin' || userProfile?.role === 'super_admin';
 
   // Load existing configuration data when in edit mode - only once per dialog opening
   useEffect(() => {
@@ -63,7 +66,7 @@ const SaveConfigurationDialog = ({
       setDescription('');
       setHasLoadedData(false);
     }
-  }, [editMode, configurationId, open, hasLoadedData]);
+  }, [editMode, configurationId, open, hasLoadedData, fetchTestDefinitionById]);
 
   // Reset hasLoadedData when dialog closes
   useEffect(() => {
@@ -73,7 +76,7 @@ const SaveConfigurationDialog = ({
   }, [open]);
 
   const handleSave = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || !canSaveConfiguration) return;
 
     console.log('Saving configuration with name:', name);
     setSaving(true);
@@ -109,6 +112,25 @@ const SaveConfigurationDialog = ({
     setHasLoadedData(false);
     onOpenChange(false);
   };
+
+  // Show different content if user doesn't have permission
+  if (!canSaveConfiguration) {
+    return (
+      <Dialog open={open} onOpenChange={handleClose}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Access Restricted</DialogTitle>
+            <DialogDescription>
+              Only administrators can save test configurations. Please contact your organization admin for assistance.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
