@@ -1,9 +1,9 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTestDefinitions, TestDefinition } from '@/hooks/useTestDefinitions';
 import { Edit, Trash2, Copy, Calendar, Clock, FileText, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -49,7 +49,7 @@ const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
   const canModifyConfiguration = userProfile?.role === 'admin' || userProfile?.role === 'super_admin';
 
   return (
-    <>
+    <TooltipProvider>
       <Card className="bg-white/80 backdrop-blur-sm border border-white/40 shadow-lg hover:shadow-xl transition-all duration-300 group">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
@@ -64,7 +64,14 @@ const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
               )}
             </div>
             {!canModifyConfiguration && (
-              <Shield className="h-4 w-4 text-amber-500" title="Read-only access" />
+              <Tooltip>
+                <TooltipTrigger>
+                  <Shield className="h-4 w-4 text-amber-500" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Read-only access</p>
+                </TooltipContent>
+              </Tooltip>
             )}
           </div>
         </CardHeader>
@@ -154,7 +161,7 @@ const ConfigurationCard = ({ configuration }: ConfigurationCardProps) => {
           configurationName={configuration.name}
         />
       )}
-    </>
+    </TooltipProvider>
   );
 };
 
