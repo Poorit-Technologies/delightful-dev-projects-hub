@@ -35,63 +35,79 @@ const SaveConfigurationDialog = ({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [saving, setSaving] = useState(false);
+  const [hasLoadedData, setHasLoadedData] = useState(false);
   const { saveTestDefinition, updateTestDefinition, fetchTestDefinitionById } = useTestDefinitions();
 
-  // Load existing configuration data when in edit mode
+  // Load existing configuration data when in edit mode - only once per dialog opening
   useEffect(() => {
-    if (editMode && configurationId && open) {
+    if (editMode && configurationId && open && !hasLoadedData) {
+      console.log('Loading configuration data for edit mode');
       const loadConfiguration = async () => {
-        const config = await fetchTestDefinitionById(configurationId);
-        if (config) {
-          setName(config.name);
-          setDescription(config.description || '');
+        try {
+          const config = await fetchTestDefinitionById(configurationId);
+          if (config) {
+            console.log('Loaded config:', config);
+            setName(config.name);
+            setDescription(config.description || '');
+            setHasLoadedData(true);
+          }
+        } catch (error) {
+          console.error('Error loading configuration:', error);
         }
       };
       loadConfiguration();
-    } else if (!editMode) {
-      // Clear form when not in edit mode
+    } else if (!editMode && open) {
+      // Clear form when not in edit mode and dialog opens
+      console.log('Clearing form for new configuration');
       setName('');
       setDescription('');
+      setHasLoadedData(false);
     }
-  }, [editMode, configurationId, open, fetchTestDefinitionById]);
+  }, [editMode, configurationId, open, hasLoadedData, fetchTestDefinitionById]);
+
+  // Reset hasLoadedData when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setHasLoadedData(false);
+    }
+  }, [open]);
 
   const handleSave = async () => {
     if (!name.trim()) return;
 
+    console.log('Saving configuration with name:', name);
     setSaving(true);
     let result;
 
-    if (editMode && configurationId) {
-      result = await updateTestDefinition(configurationId, name, description, testConfig, categories);
-    } else {
-      result = await saveTestDefinition(name, description, testConfig, categories);
-    }
+    try {
+      if (editMode && configurationId) {
+        result = await updateTestDefinition(configurationId, name, description, testConfig, categories);
+      } else {
+        result = await saveTestDefinition(name, description, testConfig, categories);
+      }
 
-    setSaving(false);
-
-    if (result) {
-      setName('');
-      setDescription('');
-      onOpenChange(false);
+      if (result) {
+        console.log('Configuration saved successfully');
+        setName('');
+        setDescription('');
+        setHasLoadedData(false);
+        onOpenChange(false);
+      }
+    } catch (error) {
+      console.error('Error saving configuration:', error);
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleClose = () => {
+    console.log('Closing dialog');
     if (!editMode) {
       setName('');
       setDescription('');
     }
+    setHasLoadedData(false);
     onOpenChange(false);
-  };
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('Name input change:', e.target.value);
-    setName(e.target.value);
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log('Description input change:', e.target.value);
-    setDescription(e.target.value);
   };
 
   return (
@@ -115,7 +131,10 @@ const SaveConfigurationDialog = ({
               id="config-name"
               type="text"
               value={name}
-              onChange={handleNameChange}
+              onChange={(e) => {
+                console.log('Name changed to:', e.target.value);
+                setName(e.target.value);
+              }}
               placeholder="e.g., Software Skills Assessment"
               autoComplete="off"
               disabled={saving}
@@ -126,7 +145,10 @@ const SaveConfigurationDialog = ({
             <Textarea
               id="config-description"
               value={description}
-              onChange={handleDescriptionChange}
+              onChange={(e) => {
+                console.log('Description changed to:', e.target.value);
+                setDescription(e.target.value);
+              }}
               placeholder="Brief description of this test configuration..."
               rows={3}
               disabled={saving}
