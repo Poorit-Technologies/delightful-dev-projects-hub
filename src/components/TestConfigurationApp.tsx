@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import TestHeader from './TestHeader';
 import TestConfiguration from './TestConfiguration';
 import CategorySelector from './CategorySelector';
 import ActionButtons from './ActionButtons';
 import ConfigurationSummary from './ConfigurationSummary';
+import UserProfile from './UserProfile';
 
 export interface TestConfig {
   totalQuestions: number;
@@ -117,6 +117,12 @@ const TestConfigurationApp = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
       </div>
 
+      {/* Header with user profile */}
+      <div className="relative z-10 flex justify-between items-center p-4">
+        <div></div>
+        <UserProfile />
+      </div>
+
       <TestHeader />
       
       <div className="relative max-w-7xl mx-auto px-4 py-8 space-y-8">
@@ -140,7 +146,7 @@ const TestConfigurationApp = () => {
         </div>
         
         <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          <ActionButtons />
+          <ActionButtons testConfig={testConfig} categories={categories} />
         </div>
       </div>
     </div>
