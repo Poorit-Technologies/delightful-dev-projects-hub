@@ -56,6 +56,35 @@ export const useTestDefinitions = () => {
     }
   };
 
+  const fetchTestDefinitionById = async (id: string): Promise<TestDefinition | null> => {
+    if (!user) return null;
+
+    try {
+      const { data, error } = await supabase
+        .from('test_definitions')
+        .select('*')
+        .eq('id', id)
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      return {
+        ...data,
+        test_config: data.test_config as unknown as TestConfig,
+        categories: data.categories as unknown as Category[],
+      };
+    } catch (error) {
+      console.error('Error fetching test definition:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load test configuration",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
+
   const saveTestDefinition = async (
     name: string,
     description: string,
@@ -186,6 +215,7 @@ export const useTestDefinitions = () => {
     saveTestDefinition,
     updateTestDefinition,
     deleteTestDefinition,
+    fetchTestDefinitionById,
     refetch: fetchTestDefinitions,
   };
 };

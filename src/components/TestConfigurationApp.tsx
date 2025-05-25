@@ -1,6 +1,7 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import TestHeader from './TestHeader';
 import TestConfiguration from './TestConfiguration';
 import CategorySelector from './CategorySelector';
@@ -8,6 +9,8 @@ import TestAssignment from './TestAssignment';
 import ActionButtons from './ActionButtons';
 import ConfigurationSummary from './ConfigurationSummary';
 import UserProfile from './UserProfile';
+import { useTestDefinitions } from '@/hooks/useTestDefinitions';
+import { useToast } from '@/hooks/use-toast';
 
 export interface TestConfig {
   totalQuestions: number;
@@ -40,8 +43,18 @@ export interface Category {
   subcategories: Subcategory[];
 }
 
-const TestConfigurationApp = () => {
+interface TestConfigurationAppProps {
+  editMode?: boolean;
+  configurationId?: string;
+}
+
+const TestConfigurationApp = ({ editMode = false, configurationId }: TestConfigurationAppProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { testDefinitions } = useTestDefinitions();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(editMode);
+  
   const [testConfig, setTestConfig] = useState<TestConfig>({
     totalQuestions: 100,
     easyQuestions: 50,
@@ -104,6 +117,30 @@ const TestConfigurationApp = () => {
     },
   ]);
 
+  // Load configuration data when in edit mode
+  useEffect(() => {
+    if (editMode && configurationId && testDefinitions.length > 0) {
+      const existingConfig = testDefinitions.find(config => config.id === configurationId);
+      if (existingConfig) {
+        setTestConfig(existingConfig.test_config);
+        setCategories(existingConfig.categories);
+        setIsLoading(false);
+      } else {
+        toast({
+          title: "Configuration not found",
+          description: "The requested configuration could not be loaded.",
+          variant: "destructive",
+        });
+        navigate('/my-configurations');
+      }
+    } else if (editMode && configurationId) {
+      // Wait for testDefinitions to load
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [editMode, configurationId, testDefinitions, navigate, toast]);
+
   const updateTestConfig = (updates: Partial<TestConfig>) => {
     setTestConfig(prev => ({ ...prev, ...updates }));
   };
@@ -148,13 +185,26 @@ const TestConfigurationApp = () => {
         return (
           <div className="space-y-8">
             <ConfigurationSummary config={testConfig} />
-            <ActionButtons testConfig={testConfig} categories={categories} />
+            <ActionButtons 
+              testConfig={testConfig} 
+              categories={categories}
+              editMode={editMode}
+              configurationId={configurationId}
+            />
           </div>
         );
       default:
         return null;
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -171,7 +221,7 @@ const TestConfigurationApp = () => {
         <UserProfile />
       </div>
 
-      <TestHeader />
+      <TestHeader editMode={editMode} />
       
       {/* Step Indicator */}
       <div className="relative max-w-7xl mx-auto px-4 py-4">

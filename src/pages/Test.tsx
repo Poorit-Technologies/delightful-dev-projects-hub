@@ -1,13 +1,15 @@
 
-import TestConfigurationApp from '@/components/TestConfigurationApp';
+import { useParams } from 'react-router-dom';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import TestConfigurationApp from '@/components/TestConfigurationApp';
 
 const Test = () => {
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
+
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        <TestConfigurationApp />
-      </div>
+      <TestConfigurationApp editMode={isEditMode} configurationId={id} />
     </ProtectedRoute>
   );
 };

@@ -67,9 +67,11 @@ const Index = () => {
             <p className="text-gray-600 text-center mb-4">
               View and manage all your saved test configurations
             </p>
-            <Button variant="outline" className="w-full" disabled>
-              Coming Soon
-            </Button>
+            <Link to="/my-configurations">
+              <Button className="w-full bg-green-600 hover:bg-green-700">
+                View Configurations
+              </Button>
+            </Link>
           </div>
 
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20">
@@ -101,6 +103,12 @@ const Index = () => {
               <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 Quick Start
+              </Button>
+            </Link>
+            <Link to="/my-configurations">
+              <Button variant="outline">
+                <FileText className="h-4 w-4 mr-2" />
+                My Configurations
               </Button>
             </Link>
           </div>
