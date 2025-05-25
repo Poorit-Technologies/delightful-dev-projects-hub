@@ -1,11 +1,16 @@
 
+import { useState } from 'react';
 import { useTestDefinitions } from '@/hooks/useTestDefinitions';
+import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { User, Building2, Shield } from 'lucide-react';
+import { User, Building2, Shield, LogOut } from 'lucide-react';
 
 const UserProfile = () => {
   const { userProfile } = useTestDefinitions();
+  const { signOut } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   if (!userProfile) return null;
 
@@ -32,6 +37,17 @@ const UserProfile = () => {
         return 'Student';
       default:
         return role;
+    }
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -80,6 +96,18 @@ const UserProfile = () => {
             <span className="text-sm font-medium">{userProfile.phone}</span>
           </div>
         )}
+
+        <div className="pt-3 border-t border-gray-200">
+          <Button 
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            variant="outline"
+            className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            {isLoggingOut ? 'Signing out...' : 'Sign Out'}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
