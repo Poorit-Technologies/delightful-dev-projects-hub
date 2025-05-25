@@ -84,6 +84,16 @@ const SaveConfigurationDialog = ({
     onOpenChange(false);
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('Name input change:', e.target.value);
+    setName(e.target.value);
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log('Description input change:', e.target.value);
+    setDescription(e.target.value);
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -100,22 +110,26 @@ const SaveConfigurationDialog = ({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Configuration Name</Label>
+            <Label htmlFor="config-name">Configuration Name</Label>
             <Input
-              id="name"
+              id="config-name"
+              type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleNameChange}
               placeholder="e.g., Software Skills Assessment"
+              autoComplete="off"
+              disabled={saving}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description">Description (Optional)</Label>
+            <Label htmlFor="config-description">Description (Optional)</Label>
             <Textarea
-              id="description"
+              id="config-description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleDescriptionChange}
               placeholder="Brief description of this test configuration..."
               rows={3}
+              disabled={saving}
             />
           </div>
         </div>
