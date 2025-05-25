@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 import TestHeader from './TestHeader';
 import TestConfiguration from './TestConfiguration';
 import CategorySelector from './CategorySelector';
+import TestAssignment from './TestAssignment';
 import ActionButtons from './ActionButtons';
 import ConfigurationSummary from './ConfigurationSummary';
 import UserProfile from './UserProfile';
@@ -38,6 +40,7 @@ export interface Category {
 }
 
 const TestConfigurationApp = () => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [testConfig, setTestConfig] = useState<TestConfig>({
     totalQuestions: 100,
     easyQuestions: 50,
@@ -108,6 +111,50 @@ const TestConfigurationApp = () => {
     setCategories(updatedCategories);
   };
 
+  const handleNext = () => {
+    setCurrentStep(prev => Math.min(prev + 1, 4));
+  };
+
+  const handlePrevious = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1));
+  };
+
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <TestConfiguration 
+            config={testConfig} 
+            onConfigChange={updateTestConfig} 
+          />
+        );
+      case 2:
+        return (
+          <CategorySelector 
+            categories={categories} 
+            onCategoriesChange={updateCategories}
+            config={testConfig}
+          />
+        );
+      case 3:
+        return (
+          <TestAssignment 
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+          />
+        );
+      case 4:
+        return (
+          <div className="space-y-8">
+            <ConfigurationSummary config={testConfig} />
+            <ActionButtons testConfig={testConfig} categories={categories} />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Decorative background elements */}
@@ -125,29 +172,64 @@ const TestConfigurationApp = () => {
 
       <TestHeader />
       
-      <div className="relative max-w-7xl mx-auto px-4 py-8 space-y-8">
+      {/* Step Indicator */}
+      <div className="relative max-w-7xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-center space-x-8">
+          {[
+            { step: 1, label: 'Configuration' },
+            { step: 2, label: 'Categories' },
+            { step: 3, label: 'Assignment' },
+            { step: 4, label: 'Review' }
+          ].map(({ step, label }) => (
+            <div key={step} className="flex items-center">
+              <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 text-sm font-semibold ${
+                currentStep >= step 
+                  ? 'bg-blue-600 border-blue-600 text-white' 
+                  : 'bg-white border-slate-300 text-slate-400'
+              }`}>
+                {step}
+              </div>
+              <span className={`ml-2 text-sm font-medium ${
+                currentStep >= step ? 'text-blue-600' : 'text-slate-400'
+              }`}>
+                {label}
+              </span>
+              {step < 4 && (
+                <div className={`w-12 h-0.5 ml-4 ${
+                  currentStep > step ? 'bg-blue-600' : 'bg-slate-300'
+                }`} />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="relative max-w-7xl mx-auto px-4 py-8">
         <div className="animate-fade-in">
-          <TestConfiguration 
-            config={testConfig} 
-            onConfigChange={updateTestConfig} 
-          />
+          {renderCurrentStep()}
         </div>
         
-        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <CategorySelector 
-            categories={categories} 
-            onCategoriesChange={updateCategories}
-            config={testConfig}
-          />
-        </div>
-        
-        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <ConfigurationSummary config={testConfig} />
-        </div>
-        
-        <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          <ActionButtons testConfig={testConfig} categories={categories} />
-        </div>
+        {currentStep < 3 && (
+          <div className="flex justify-center mt-8">
+            <div className="flex space-x-4">
+              {currentStep > 1 && (
+                <Button 
+                  onClick={handlePrevious}
+                  variant="outline"
+                  className="px-6"
+                >
+                  Previous
+                </Button>
+              )}
+              <Button 
+                onClick={handleNext}
+                className="px-6 bg-blue-600 hover:bg-blue-700"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
