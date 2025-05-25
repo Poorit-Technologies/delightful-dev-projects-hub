@@ -36,11 +36,11 @@ export const useTestDefinitions = () => {
 
       if (error) throw error;
       
-      // Type the data properly with explicit casting
+      // Type the data properly with safe casting using unknown
       const typedData = (data || []).map(item => ({
         ...item,
-        test_config: item.test_config as TestConfig,
-        categories: item.categories as Category[],
+        test_config: item.test_config as unknown as TestConfig,
+        categories: item.categories as unknown as Category[],
       }));
       
       setTestDefinitions(typedData);
@@ -88,8 +88,8 @@ export const useTestDefinitions = () => {
       
       return {
         ...data,
-        test_config: data.test_config as TestConfig,
-        categories: data.categories as Category[],
+        test_config: data.test_config as unknown as TestConfig,
+        categories: data.categories as unknown as Category[],
       };
     } catch (error) {
       console.error('Error saving test definition:', error);
