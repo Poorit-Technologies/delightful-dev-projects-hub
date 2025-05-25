@@ -12,24 +12,26 @@ import AuthPage from "./components/AuthPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="/test/edit/:id" element={<Test />} />
-            <Route path="/my-configurations" element={<MyConfigurations />} />
-            <Route path="/auth" element={<AuthPage />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/test" element={<Test />} />
+              <Route path="/test/edit/:id" element={<Test />} />
+              <Route path="/my-configurations" element={<MyConfigurations />} />
+              <Route path="/auth" element={<AuthPage />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
