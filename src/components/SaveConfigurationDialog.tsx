@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -20,24 +20,53 @@ interface SaveConfigurationDialogProps {
   onOpenChange: (open: boolean) => void;
   testConfig: TestConfig;
   categories: Category[];
+  editMode?: boolean;
+  configurationId?: string;
 }
 
 const SaveConfigurationDialog = ({ 
   open, 
   onOpenChange, 
   testConfig, 
-  categories 
+  categories,
+  editMode = false,
+  configurationId
 }: SaveConfigurationDialogProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [saving, setSaving] = useState(false);
-  const { saveTestDefinition } = useTestDefinitions();
+  const { saveTestDefinition, updateTestDefinition, fetchTestDefinitionById } = useTestDefinitions();
+
+  // Load existing configuration data when in edit mode
+  useEffect(() => {
+    if (editMode && configurationId && open) {
+      const loadConfiguration = async () => {
+        const config = await fetchTestDefinitionById(configurationId);
+        if (config) {
+          setName(config.name);
+          setDescription(config.description || '');
+        }
+      };
+      loadConfiguration();
+    } else if (!editMode) {
+      // Clear form when not in edit mode
+      setName('');
+      setDescription('');
+    }
+  }, [editMode, configurationId, open, fetchTestDefinitionById]);
 
   const handleSave = async () => {
     if (!name.trim()) return;
 
     setSaving(true);
-    const result = await saveTestDefinition(name, description, testConfig, categories);
+    let result;
+
+    if (editMode && configurationId) {
+      result = await updateTestDefinition(configurationId, name, description, testConfig, categories);
+    } else {
+      result = await saveTestDefinition(name, description, testConfig, categories);
+    }
+
     setSaving(false);
 
     if (result) {
@@ -48,8 +77,10 @@ const SaveConfigurationDialog = ({
   };
 
   const handleClose = () => {
-    setName('');
-    setDescription('');
+    if (!editMode) {
+      setName('');
+      setDescription('');
+    }
     onOpenChange(false);
   };
 
@@ -57,9 +88,14 @@ const SaveConfigurationDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Save Test Configuration</DialogTitle>
+          <DialogTitle>
+            {editMode ? 'Update Test Configuration' : 'Save Test Configuration'}
+          </DialogTitle>
           <DialogDescription>
-            Give your test configuration a name and description to save it for later use.
+            {editMode 
+              ? 'Update your test configuration details.'
+              : 'Give your test configuration a name and description to save it for later use.'
+            }
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -88,7 +124,10 @@ const SaveConfigurationDialog = ({
             Cancel
           </Button>
           <Button onClick={handleSave} disabled={!name.trim() || saving}>
-            {saving ? 'Saving...' : 'Save Configuration'}
+            {saving 
+              ? (editMode ? 'Updating...' : 'Saving...') 
+              : (editMode ? 'Update Configuration' : 'Save Configuration')
+            }
           </Button>
         </DialogFooter>
       </DialogContent>
