@@ -35,7 +35,15 @@ export const useTestDefinitions = () => {
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      setTestDefinitions(data || []);
+      
+      // Type the data properly with explicit casting
+      const typedData = (data || []).map(item => ({
+        ...item,
+        test_config: item.test_config as TestConfig,
+        categories: item.categories as Category[],
+      }));
+      
+      setTestDefinitions(typedData);
     } catch (error) {
       console.error('Error fetching test definitions:', error);
       toast({
@@ -63,8 +71,8 @@ export const useTestDefinitions = () => {
           user_id: user.id,
           name,
           description,
-          test_config: testConfig,
-          categories,
+          test_config: testConfig as any,
+          categories: categories as any,
         })
         .select()
         .single();
@@ -77,7 +85,12 @@ export const useTestDefinitions = () => {
       });
 
       await fetchTestDefinitions();
-      return data;
+      
+      return {
+        ...data,
+        test_config: data.test_config as TestConfig,
+        categories: data.categories as Category[],
+      };
     } catch (error) {
       console.error('Error saving test definition:', error);
       toast({
@@ -104,8 +117,8 @@ export const useTestDefinitions = () => {
         .update({
           name,
           description,
-          test_config: testConfig,
-          categories,
+          test_config: testConfig as any,
+          categories: categories as any,
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
